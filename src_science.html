@@ -4,11 +4,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
 <style>
-/* Layout: 모눈 실험 노트 위에 단원 탭 → 이야기·핵심·실험실·퀴즈·집에서 해보기 순서의 한 줄 흐름 */
+/* Layout: 모눈 실험 노트 위에 학기 → 단원 탭 → 이야기·핵심·실험실·퀴즈·집에서 해보기 순서의 한 줄 흐름 */
 :root{
   --paper:#F6F9FC; --card:#FFFFFF; --ink:#1E2A44; --soft:#5B6782; --line:#D9E3EF; --grid:rgba(59,125,219,.07);
   --sun:#FFC83D; --sun-ink:#5A3D00;
   --leaf:#2E9E6B; --sky:#3B7DDB; --rush:#E46B2E; --berry:#B4458F;
+  --slate:#4A5A78; --heat:#D2543A; --violet:#6D5BD0; --teal:#178A8A; --moss:#5E8C31;
   --ok:#2E9E6B; --bad:#D6455D; --ok-bg:#E5F6EE; --bad-bg:#FCE8EC;
   --display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
@@ -16,17 +17,19 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --paper:#132030; --card:#1B2B3F; --ink:#E9EFF7; --soft:#A5B3C8; --line:#2C405A; --grid:rgba(140,180,240,.06);
   --sun:#FFD261; --sun-ink:#3A2800; --leaf:#4CC48D; --sky:#6FA4F2; --rush:#F28A55; --berry:#DA72B7;
+  --slate:#9FB0CC; --heat:#F07A62; --violet:#A597F2; --teal:#4CC4C4; --moss:#9CC968;
   --ok:#4CC48D; --bad:#F27286; --ok-bg:#163A2C; --bad-bg:#45202A; color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#132030; --card:#1B2B3F; --ink:#E9EFF7; --soft:#A5B3C8; --line:#2C405A; --grid:rgba(140,180,240,.06);
   --sun:#FFD261; --sun-ink:#3A2800; --leaf:#4CC48D; --sky:#6FA4F2; --rush:#F28A55; --berry:#DA72B7;
+  --slate:#9FB0CC; --heat:#F07A62; --violet:#A597F2; --teal:#4CC4C4; --moss:#9CC968;
   --ok:#4CC48D; --bad:#F27286; --ok-bg:#163A2C; --bad-bg:#45202A; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.7;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
   background-size:24px 24px}
-.wrap{max-width:860px;margin:0 auto;padding-block:20px 60px;
+.wrap{max-width:880px;margin:0 auto;padding-block:20px 60px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3,.disp{font-family:var(--display);font-weight:400;text-wrap:balance;line-height:1.3;margin:0}
 p{margin:0}
@@ -38,20 +41,24 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 .brand{display:flex;align-items:center;gap:12px}
 .brand h1{font-size:2rem}
 .brand small{display:block;color:var(--soft);font-size:.9rem}
-.stars{display:flex;align-items:center;gap:8px;background:var(--sun);color:var(--sun-ink);border-radius:999px;padding:6px 16px;font-family:var(--display);font-size:1.15rem}
+.stars{display:flex;align-items:center;gap:8px;background:var(--sun);color:var(--sun-ink);border-radius:999px;padding:6px 16px;font-family:var(--display);font-size:1.15rem;font-variant-numeric:tabular-nums}
 .stars svg{width:22px;height:22px}
 .parent{margin-top:16px;border:1.5px dashed var(--line);border-radius:14px;padding:12px 16px;color:var(--soft);font-size:.95rem}
 .parent b{color:var(--ink)}
 
-/* tabs */
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+/* semester + tabs */
+.sems{display:flex;gap:8px;margin-top:20px}
+.sem{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:6px 18px;font-family:var(--display);font-size:1.05rem}
+.sem[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.sem small{font-family:var(--body);font-size:.8rem;opacity:.8;margin-left:4px}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}
 .tab{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .tab .n{font-size:.8rem;color:var(--soft);letter-spacing:.04em}
-.tab .t{font-family:var(--display);font-size:1.1rem;line-height:1.25}
+.tab .t{font-family:var(--display);font-size:1.05rem;line-height:1.25}
 .tab .b{font-size:.8rem;color:var(--soft)}
 .tab[aria-selected="true"]{border-color:var(--u);box-shadow:0 4px 0 var(--u)}
-.tab .badge{display:inline-block;margin-top:4px;font-size:.75rem;padding:1px 8px;border-radius:999px;background:var(--u);color:var(--card)}
-@media (max-width:640px){.tabs{grid-template-columns:repeat(2,1fr)}}
+.tab .badge{display:inline-block;margin-top:4px;font-size:.75rem;padding:1px 8px;border-radius:999px;background:var(--u);color:var(--card);align-self:flex-start}
+@media (max-width:720px){.tabs{display:flex;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}.tab{flex:0 0 150px;scroll-snap-align:start}}
 
 /* unit */
 .unit{margin-top:22px;display:flex;flex-direction:column;gap:18px}
@@ -62,14 +69,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 .talk svg{flex:0 0 46px;width:46px;height:46px}
 .talk p{min-width:0}
 .sec{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:18px 18px}
-.sec>h3{font-size:1.35rem;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sec>h3{font-size:1.35rem;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:12px}
 .sec>h3 .tag{font-family:var(--body);font-size:.75rem;background:color-mix(in srgb,var(--u) 16%,transparent);color:var(--ink);padding:2px 10px;border-radius:999px}
-.points{display:grid;gap:12px}
+.points{display:grid;gap:14px}
 .pt{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
 .pt .k{width:34px;height:34px;border-radius:50%;background:var(--u);color:var(--card);display:grid;place-items:center;font-family:var(--display);font-size:1.1rem}
+.pt>div{min-width:0}
 .pt b{font-family:var(--display);font-weight:400;font-size:1.12rem;display:block}
 .pt span{color:var(--soft)}
-.pt em{font-style:normal;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--sun) 55%,transparent) 0)}
+.pt em{font-style:normal;color:var(--ink);background:linear-gradient(transparent 60%,color-mix(in srgb,var(--sun) 55%,transparent) 0)}
 .words{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .word{border:1.5px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.9rem;background:var(--paper)}
 .word b{font-weight:400;font-family:var(--display)}
@@ -83,11 +91,14 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 .feedback{margin-top:10px;padding:10px 14px;border-radius:12px;font-size:.98rem}
 .feedback.good{background:var(--ok-bg)}
 .feedback.oops{background:var(--bad-bg)}
+.sub3{font-size:1.15rem;margin-top:18px}
 
-/* food chain */
+/* chain / order */
 .chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:52px;margin:12px 0;padding:8px;border:2px dashed var(--line);border-radius:14px}
 .chain .slot{font-family:var(--display);padding:6px 12px;border-radius:10px;background:color-mix(in srgb,var(--u) 15%,var(--card))}
 .chain .arr{color:var(--soft);font-size:.8rem}
+.steps{margin:10px 0 0;padding-left:1.4em;display:grid;gap:6px}
+.steps b{font-family:var(--display);font-weight:400}
 .bars{display:grid;gap:8px;margin-top:10px}
 .bar{display:grid;grid-template-columns:62px 1fr 48px;gap:10px;align-items:center;font-size:.95rem}
 .bar .track{height:18px;background:var(--paper);border:1px solid var(--line);border-radius:9px;overflow:hidden}
@@ -104,10 +115,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 /* race */
 .lane{position:relative;height:46px;border-bottom:2px dashed var(--line)}
 .lane .who{position:absolute;left:0;top:4px;font-size:.8rem;color:var(--soft)}
-.runner{position:absolute;bottom:4px;left:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--card);font-family:var(--display);font-size:.85rem;transform:translateX(0)}
+.runner{position:absolute;bottom:4px;left:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--display);font-size:.85rem;transform:translateX(0)}
 .flag{position:absolute;bottom:0;width:2px;height:30px;background:var(--soft)}
 .track-wrap{position:relative;margin-top:12px;padding-right:30px}
 .timer{font-family:var(--display);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.tblbox{overflow-x:auto}
 .tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:.95rem;font-variant-numeric:tabular-nums}
 .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
 .tbl th{font-weight:400;color:var(--soft)}
@@ -116,23 +128,42 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 .calc input{width:110px;font:inherit;font-size:1.05rem;padding:6px 10px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
 .big{font-family:var(--display);font-size:1.5rem}
 
-/* acid base lab */
+/* lab common */
 .lab{display:grid;grid-template-columns:1fr 180px;gap:16px;align-items:start;margin-top:10px}
+.lab>div{min-width:0}
 @media (max-width:560px){.lab{grid-template-columns:1fr}}
 .bottles{display:flex;flex-wrap:wrap;gap:8px}
 .bottle{border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:6px 12px;font-size:.95rem}
 .bottle.done{opacity:.4}
-.bottle[aria-pressed="true"]{border-color:var(--u)}
+.bottle[aria-pressed="true"]{border-color:var(--u);background:color-mix(in srgb,var(--u) 14%,var(--paper))}
 .beaker{display:flex;flex-direction:column;align-items:center;gap:6px}
 .beaker svg{width:140px;height:160px}
 .beaker .lbl{font-family:var(--display);text-align:center}
-.bins{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
 .bin{border:2px dashed var(--line);border-radius:14px;padding:10px;min-height:70px}
 .bin h4{margin:0 0 6px;font-family:var(--display);font-weight:400;font-size:1.05rem}
 .chip{display:inline-block;margin:2px;padding:2px 10px;border-radius:999px;font-size:.85rem;color:#fff}
+.chip.u{background:var(--u);color:var(--card)}
 .scale{display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:6px}
 .scale i{flex:1}
 .scale-l{display:flex;justify-content:space-between;font-size:.78rem;color:var(--soft)}
+
+/* heat rods */
+.rods{display:grid;gap:12px;margin-top:12px}
+.rod{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center}
+.rod .bar2{position:relative;height:22px;border-radius:11px;background:var(--paper);border:1.5px solid var(--line);overflow:hidden}
+.rod .hot{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#E8452C,#FF9A3C 70%,#FFD06B)}
+.rod .flame{font-size:.8rem;color:var(--soft)}
+
+/* planets */
+.planets{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 14px;margin-top:14px;padding:16px;border-radius:14px;background:#101830;overflow-x:auto}
+.planet{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;color:#E9EFF7;padding:4px;border-radius:10px}
+.planet i{display:block;border-radius:50%}
+.planet span{font-size:.8rem}
+.planet[aria-pressed="true"]{outline:2px solid #FFD261}
+.dist{position:relative;height:34px;margin-top:10px;border-bottom:2px solid var(--line)}
+.dist i{position:absolute;bottom:-6px;width:10px;height:10px;border-radius:50%;transform:translateX(-50%)}
+.dist .lab0{position:absolute;bottom:10px;font-size:.75rem;color:var(--soft);transform:translateX(-50%);white-space:nowrap}
 
 /* quiz */
 .q{padding:14px 0;border-top:1px dashed var(--line)}
@@ -151,59 +182,218 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true"><circle cx="32" cy="34" r="26" fill="var(--sun)"/><circle cx="23" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><circle cx="41" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><path d="M31 30h2" stroke="var(--ink)" stroke-width="3"/><circle cx="24" cy="31" r="3" fill="var(--ink)"/><circle cx="42" cy="31" r="3" fill="var(--ink)"/><path d="M25 45q7 6 14 0" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><path d="M32 8v-4M24 10l-3-3M40 10l3-3" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/></svg>
-      <div><h1>과학 탐험 노트</h1><small>초등 5학년 2학기 · 궁금 박사와 함께</small></div>
+      <div><h1>과학 탐험 노트</h1><small>초등 5학년 1·2학기 · 궁금 박사와 함께</small></div>
     </div>
     <div class="stars" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg><span id="starCount">0</span> / <span id="starTotal">0</span></div>
   </header>
 
-  <div class="parent"><b>보호자께</b> 하루에 한 단원 조각씩, 15분이면 충분해요. 이야기 → 핵심 3가지 → 놀이 실험실 → 퀴즈 순서로 하고, 주말에 "집에서 해보기"를 함께 해 보세요. 틀려도 해설을 읽고 다시 풀 수 있어요. 별은 이 기기에만 저장돼요.</div>
+  <div class="parent"><b>보호자께</b> 1학기 5단원, 2학기 5단원이 들어 있어요. 하루에 15분, 이야기 → 꼭 알아야 할 것 → 놀이 실험실 → 퀴즈 순서로 하고, 주말에 "집에서 해보기"를 함께 해 보세요. 틀려도 해설을 읽고 다시 풀 수 있어요. 별은 이 기기에만 저장돼요.</div>
 
+  <div class="sems" id="sems"></div>
   <nav class="tabs" role="tablist" id="tabs"></nav>
   <main id="unit"></main>
-  <p class="foot">교과서 출판사마다 단원 이름과 순서가 조금 다를 수 있어요. 학교 진도에 맞는 단원부터 골라 보세요.</p>
+  <p class="foot">2015 개정 교육과정 5학년 과학 단원 기준이에요. 출판사나 교육과정에 따라 단원 이름과 순서가 조금 다를 수 있으니, 학교 진도에 맞는 단원부터 골라 보세요.</p>
 </div>
 
 <script>
 const OWL='<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="26" fill="var(--sun)"/><circle cx="23" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><circle cx="41" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><circle cx="24" cy="31" r="3" fill="var(--ink)"/><circle cx="42" cy="31" r="3" fill="var(--ink)"/><path d="M25 45q7 6 14 0" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/></svg>';
 
 const UNITS=[
-{id:'eco',n:'1단원',name:'생물과 환경',color:'var(--leaf)',badge:'생태 탐험가',
+/* ================= 1학기 ================= */
+{id:'inq1',sem:1,n:'1학기 1단원',name:'과학자는 어떻게 탐구할까요',color:'var(--slate)',badge:'꼬마 과학자',
+ hook:'과학자는 특별한 사람일까? 사실 과학자들이 쓰는 방법은 "자세히 보기, 재어 보기, 나눠 보기, 짐작해 보기, 알려 주기"야. 너도 오늘부터 이 방법을 쓰면 과학자가 될 수 있어!',
+ points:[
+  {t:'관찰: 자세히 살펴보기',d:'눈, 코, 귀, 혀, 피부의 <em>감각</em>과 돋보기·현미경 같은 도구를 써서 물체의 특징을 자세히 알아내는 것이 <em>관찰</em>이에요. "잎 가장자리가 톱니 모양이다"처럼 본 그대로 적어요.'},
+  {t:'측정: 숫자로 재어 보기',d:'자, 저울, 온도계, 초시계로 길이·무게·온도·시간을 재어 <em>숫자와 단위</em>로 나타내는 것이 <em>측정</em>이에요. 같은 것을 <em>여러 번</em> 재면 더 정확해요.'},
+  {t:'분류: 기준을 정해 나누기',d:'공통점과 차이점에 따라 무리를 나누는 것이 <em>분류</em>예요. 기준은 "다리가 있는가?"처럼 <em>누가 해도 같은 결과</em>가 나와야 해요. "예쁜가?"는 사람마다 달라서 좋은 기준이 아니에요.'},
+  {t:'추리와 예상: 짐작해 보기',d:'<em>추리</em>는 관찰한 것과 경험으로 보이지 않는 원인을 짐작하는 것이에요(땅이 젖었으니 비가 왔겠다). <em>예상</em>은 지금까지의 규칙으로 앞으로 일어날 일을 미리 생각하는 것이에요(매일 1 cm씩 자랐으니 내일도 1 cm 자라겠다).'},
+  {t:'의사소통: 알려 주기',d:'탐구한 결과를 말, 글, 그림, 표, 그래프로 다른 사람과 나누는 것이 <em>의사소통</em>이에요. 친구의 의견을 듣고 생각을 고치는 것도 중요해요.'}],
+ words:[['관찰','감각·도구로 살피기'],['측정','숫자와 단위로'],['분류','기준 정해 나누기'],['추리','원인 짐작'],['예상','앞일 미리 생각'],['의사소통','결과 나누기']],
+ sim:'sort',simData:{tag:'탐구 기능 맞히기',intro:'카드 하나를 고르고, 어떤 탐구 기능을 쓴 것인지 골라 보세요.',
+  bins:['관찰','측정','분류','추리','예상','의사소통'],
+  items:[
+   {n:'돋보기로 개미 다리를 자세히 본다',k:0,why:'감각과 도구로 특징을 살피는 관찰이에요.'},
+   {n:'꽃 냄새를 맡고 색깔을 적는다',k:0,why:'코와 눈으로 특징을 알아내는 관찰이에요.'},
+   {n:'자로 연필 길이를 잰다',k:1,why:'도구로 재어 숫자와 단위(cm)로 나타내는 측정이에요.'},
+   {n:'온도계로 물 온도를 잰다',k:1,why:'온도를 ℃ 단위로 나타내는 측정이에요.'},
+   {n:'동물을 다리 수에 따라 나눈다',k:2,why:'누가 해도 같은 기준으로 나누는 분류예요.'},
+   {n:'물에 뜨는 것과 가라앉는 것으로 나눈다',k:2,why:'뜨는지 가라앉는지라는 기준으로 나누는 분류예요.'},
+   {n:'발자국을 보고 고양이가 지나갔다고 생각한다',k:3,why:'보이지 않는 원인을 짐작하는 추리예요.'},
+   {n:'운동장이 젖어 있어 밤에 비가 왔다고 생각한다',k:3,why:'관찰한 것과 경험으로 원인을 짐작하는 추리예요.'},
+   {n:'매일 1 cm씩 자란 콩나물이 내일도 1 cm 자랄 것 같다',k:4,why:'지금까지의 규칙으로 앞일을 생각하는 예상이에요.'},
+   {n:'5분마다 2 ℃씩 식었으니 10분 뒤 온도를 짐작한다',k:4,why:'규칙을 찾아 앞으로의 값을 생각하는 예상이에요.'},
+   {n:'실험 결과를 그래프로 그려 발표한다',k:5,why:'결과를 다른 사람과 나누는 의사소통이에요.'},
+   {n:'관찰 일기를 친구와 바꿔 읽는다',k:5,why:'글과 그림으로 생각을 나누는 의사소통이에요.'}]},
+ quiz:[
+  {q:'돋보기로 개미의 다리 수를 자세히 세어 보는 탐구 기능은?',o:['관찰','추리','예상'],a:0,w:'감각과 도구로 특징을 자세히 알아내는 것이 관찰이에요.'},
+  {q:'길이, 무게, 온도를 도구로 재어 숫자로 나타내는 것은?',o:['분류','측정','의사소통'],a:1,w:'측정할 때는 꼭 단위(cm, g, ℃)를 함께 써요.'},
+  {q:'"운동장이 젖어 있으니 비가 왔을 거야"는 어떤 탐구 기능일까요?',o:['측정','추리','분류'],a:1,w:'직접 보지 못한 원인을 관찰한 것으로 짐작하는 것이 추리예요.'},
+  {q:'분류 기준으로 가장 알맞은 것은?',o:['예쁜 것과 예쁘지 않은 것','다리가 있는 것과 없는 것','내가 좋아하는 것'],a:1,w:'좋은 기준은 누가 나누어도 같은 결과가 나와야 해요.'},
+  {q:'측정을 더 정확하게 하려면?',o:['눈대중으로 잰다','같은 도구로 여러 번 재어 본다','한 번만 빨리 잰다'],a:1,w:'여러 번 재면 실수를 줄일 수 있어요.'}],
+ home:{title:'우리 집 물건 분류·측정하기',steps:['집에 있는 물건 10개를 모아요(숟가락, 지우개, 컵, 동전 등).','"물에 뜨는가?", "자석에 붙는가?"처럼 누구나 같은 결과가 나오는 기준으로 두 번 나누어 봐요.','줄자로 가족의 키나 물건 길이를 세 번씩 재어 표로 정리하고 가족에게 발표해요.'],warn:''}},
+
+{id:'heat',sem:1,n:'1학기 2단원',name:'온도와 열',color:'var(--heat)',badge:'열 탐정',
+ hook:'뜨거운 국에 쇠숟가락을 넣어 두면 손잡이까지 뜨거워지는데, 나무 숟가락은 덜 뜨거워. 열은 어떻게 움직이고, 왜 물질마다 다르게 움직일까?',
+ points:[
+  {t:'온도와 온도계',d:'물체가 차갑거나 따뜻한 정도를 숫자로 나타낸 것이 <em>온도</em>예요. 단위는 <em>℃(섭씨도)</em>. 공기 온도는 기온, 물 온도는 수온, 몸 온도는 체온이에요. 액체·공기는 <em>알코올 온도계</em>, 물체 표면은 닿지 않고 재는 <em>적외선 온도계</em>, 체온은 <em>귀 체온계</em>로 재요. 손 느낌은 사람마다 달라서 온도계를 써야 정확해요.'},
+  {t:'열은 뜨거운 곳에서 차가운 곳으로',d:'온도가 다른 두 물체가 닿으면 <em>열</em>이 온도가 높은 물체에서 낮은 물체로 이동해요. 그래서 뜨거운 쪽은 식고 차가운 쪽은 데워지다가 결국 <em>온도가 같아져요</em>. 손에 얼음을 쥐면 손은 차가워지고 얼음은 녹아요.'},
+  {t:'전도: 고체에서 열이 이동하는 방법',d:'고체에서 열이 물질을 따라 이동하는 것을 <em>전도</em>라고 해요. 프라이팬 가운데를 데우면 가장자리까지 뜨거워져요. 고체 물질마다 열이 이동하는 빠르기가 달라서 <em>구리 → 철 → 유리</em> 순서로 빨라요(구리가 가장 빠름).'},
+  {t:'단열: 열이 잘 못 가게 막기',d:'두 물질 사이에서 열이 이동하지 못하게 막는 것이 <em>단열</em>이에요. 프라이팬 손잡이는 열이 잘 이동하지 않는 나무나 플라스틱으로 만들어요. 보온병, 아이스박스, 겨울 내복, 이중창도 단열을 이용해요.'},
+  {t:'대류: 액체와 기체에서 열이 이동하는 방법',d:'액체나 기체는 데워진 부분이 <em>위로 올라가고</em> 차가운 부분이 아래로 내려오면서 열이 이동해요. 이것이 <em>대류</em>예요. 그래서 난방기는 <em>낮은 곳</em>에, 에어컨은 <em>높은 곳</em>에 두면 방 전체가 골고루 따뜻해지거나 시원해져요.'}],
+ words:[['온도','차갑고 따뜻한 정도'],['℃','섭씨도'],['전도','고체 속 열 이동'],['단열','열 이동 막기'],['대류','액체·기체 열 이동']],
+ sim:'heat',
+ quiz:[
+  {q:'물체에 닿지 않고 표면 온도를 잴 수 있는 온도계는?',o:['알코올 온도계','적외선 온도계','귀 체온계'],a:1,w:'적외선 온도계는 물체 표면에 대고 버튼만 누르면 온도가 나와요.'},
+  {q:'뜨거운 물이 든 비커를 차가운 물이 든 수조에 넣으면?',o:['뜨거운 물이 더 뜨거워진다','두 물의 온도가 점점 같아진다','아무 변화가 없다'],a:1,w:'열이 뜨거운 물에서 차가운 물로 이동해서 결국 온도가 같아져요.'},
+  {q:'열이 가장 빠르게 이동하는 고체는?',o:['구리판','철판','유리판'],a:0,w:'구리는 열이 아주 잘 이동해서 냄비 바닥 재료로도 쓰여요.'},
+  {q:'프라이팬 손잡이를 나무나 플라스틱으로 만드는 까닭은?',o:['열이 잘 이동하지 않아서','더 무거워서','색이 예뻐서'],a:0,w:'열이 손까지 오지 않게 막아 주는 단열 때문이에요.'},
+  {q:'난방기를 방의 낮은 곳에 두는 까닭은?',o:['데워진 공기가 위로 올라가 방 전체가 따뜻해져서','바닥이 가장 차가워서 바닥만 데우려고','높은 곳은 위험해서'],a:0,w:'데워진 공기가 올라가고 차가운 공기가 내려오는 대류 덕분에 방 전체가 따뜻해져요.'}],
+ home:{title:'숟가락 열 전달 비교',steps:['쇠숟가락, 플라스틱 숟가락, 나무 숟가락을 준비해요.','어른이 컵에 따뜻한 물(목욕물보다 조금 뜨거운 정도)을 담아 주면 세 숟가락을 함께 꽂아요.','1분 뒤 손잡이 끝을 살짝 만져 보고 어느 것이 가장 따뜻한지 순서를 적어요.'],warn:'끓는 물은 쓰지 말고, 물은 어른이 준비해요. 쇠숟가락은 손끝으로 살짝만 만져요.'}},
+
+{id:'solar',sem:1,n:'1학기 3단원',name:'태양계와 별',color:'var(--violet)',badge:'우주 탐험가',
+ hook:'지구가 콩 한 알 크기라면 목성은 자몽만 하대! 우리 태양계에는 어떤 가족들이 살고 있을까? 밤하늘에서 북쪽을 찾는 방법도 알아보자.',
+ points:[
+  {t:'태양은 생명의 에너지',d:'태양은 <em>빛과 열</em>을 내요. 식물은 햇빛으로 양분을 만들고, 동물은 그 식물을 먹고 살아요. 햇빛 덕분에 물이 증발해 구름과 비가 생기고, 우리는 햇빛으로 전기(태양광 발전)를 만들기도 해요.'},
+  {t:'태양계 가족',d:'<em>태양계</em>는 태양과 태양 주위를 도는 천체들이에요. 행성은 8개로, 태양에서 가까운 순서로 <em>수성, 금성, 지구, 화성, 목성, 토성, 천왕성, 해왕성</em>이에요. 달처럼 행성 주위를 도는 <em>위성</em>, 소행성, 혜성도 태양계 가족이에요.'},
+  {t:'행성의 크기와 거리',d:'지구의 지름을 1이라고 하면 가장 큰 <em>목성은 약 11.2</em>, 가장 작은 <em>수성은 약 0.4</em>예요. 태양에서 지구까지 거리를 1이라고 하면 해왕성은 약 30이에요. 태양에서 멀어질수록 행성 사이의 거리도 멀어져요.'},
+  {t:'별과 행성은 달라요',d:'<em>별</em>은 태양처럼 스스로 빛을 내요. 아주 멀리 있어서 여러 날 관측해도 위치가 거의 변하지 않아요. <em>행성</em>은 스스로 빛을 내지 못하고 햇빛을 반사해서 보여요. 여러 날 관측하면 별들 사이에서 위치가 바뀌어요. 밤하늘의 별 몇 개를 이어 이름을 붙인 것이 <em>별자리</em>예요.'},
+  {t:'북극성으로 북쪽 찾기',d:'<em>북극성</em>은 늘 북쪽 하늘에 있어서 방향을 찾는 데 도움을 줘요. <em>북두칠성</em> 국자 끝의 두 별을 이은 거리의 <em>5배</em>만큼 떨어진 곳, 또는 <em>카시오페이아자리</em>(W 모양)를 이용해 찾을 수 있어요.'}],
+ words:[['태양계','태양과 그 가족'],['행성','태양 주위를 도는 천체'],['위성','행성 주위를 도는 천체'],['별','스스로 빛을 냄'],['북극성','북쪽 길잡이']],
+ sim:'solar',
+ quiz:[
+  {q:'태양계에서 스스로 빛을 내는 것은?',o:['태양','지구','달'],a:0,w:'태양은 별이에요. 행성과 달은 햇빛을 반사해서 밝게 보여요.'},
+  {q:'태양계에서 가장 큰 행성은?',o:['지구','토성','목성'],a:2,w:'목성의 지름은 지구의 약 11배예요.'},
+  {q:'태양에서 가장 가까운 행성은?',o:['수성','금성','화성'],a:0,w:'수성은 태양과 가장 가깝고 크기도 가장 작아요.'},
+  {q:'별과 행성의 차이로 알맞은 것은?',o:['행성은 스스로 빛을 낸다','여러 날 관측하면 행성은 위치가 바뀐다','별은 태양 주위를 돈다'],a:1,w:'행성은 태양 주위를 돌기 때문에 별들 사이에서 위치가 조금씩 바뀌어요.'},
+  {q:'북두칠성으로 북극성을 찾을 때, 국자 끝 두 별 사이 거리의 몇 배만큼 가야 할까요?',o:['2배','5배','10배'],a:1,w:'국자 끝 두 별을 이은 방향으로 그 거리의 5배쯤 가면 북극성이 있어요.'}],
+ home:{title:'과일로 태양계 크기 모형',steps:['지구를 지름 1 cm 콩으로 정해요.','목성은 지름 11 cm쯤 되는 자몽, 토성은 9 cm쯤 되는 오렌지, 천왕성·해왕성은 4 cm쯤 되는 자두나 방울토마토, 금성은 콩, 화성·수성은 팥이나 쌀알로 골라요.','크기 순서대로 늘어놓고 사진을 찍어요. 맑은 밤에는 북쪽 하늘에서 북두칠성을 찾아봐요.'],warn:''}},
+
+{id:'dissolve',sem:1,n:'1학기 4단원',name:'용해와 용액',color:'var(--teal)',badge:'용액 요리사',
+ hook:'설탕을 물에 넣고 저으면 설탕이 사라진 것처럼 보여. 정말 사라진 걸까? 그리고 설탕은 물에 끝없이 녹을까?',
+ points:[
+  {t:'용해와 용액',d:'설탕이 물에 녹는 것처럼 어떤 물질이 다른 물질에 녹아 골고루 섞이는 현상이 <em>용해</em>예요. 녹는 물질(설탕)은 <em>용질</em>, 녹이는 물질(물)은 <em>용매</em>, 골고루 섞인 물질(설탕물)은 <em>용액</em>이에요. 흙탕물처럼 오래 두면 가라앉는 것은 용액이 아니에요.'},
+  {t:'녹아도 무게는 그대로',d:'설탕 10 g을 물 100 g에 녹이면 설탕물은 <em>110 g</em>이에요. 설탕은 없어진 것이 아니라 <em>아주 작게 나뉘어</em> 물속에 골고루 섞여 있어서 눈에 보이지 않을 뿐이에요.'},
+  {t:'물질마다 녹는 양이 달라요',d:'같은 온도, 같은 양의 물에 넣어도 물질마다 녹는 양이 달라요. 20 ℃ 물 50 mL에는 <em>설탕 &gt; 소금 &gt; 베이킹 소다</em> 순서로 많이 녹아요.'},
+  {t:'물이 따뜻할수록 많이 녹아요',d:'차가운 물에서 다 녹지 않고 남은 백반도 <em>물을 따뜻하게 하면</em> 더 녹아요. 반대로 백반이 많이 녹은 따뜻한 용액을 차갑게 식히면 다시 백반 알갱이가 생겨요.'},
+  {t:'용액의 진하기',d:'같은 양의 용매에 용질이 많이 녹아 있을수록 <em>진한 용액</em>이에요. 색이 있으면 색으로, 먹을 수 있으면 맛으로 비교하고, 색이 없으면 <em>물체가 뜨는 정도</em>로 비교해요. 진한 설탕물일수록 방울토마토가 <em>더 높이</em> 떠요.'}],
+ words:[['용해','녹아 골고루 섞임'],['용질','녹는 물질'],['용매','녹이는 물질'],['용액','골고루 섞인 물질'],['진하기','얼마나 많이 녹았나']],
+ sim:'dissolve',
+ quiz:[
+  {q:'소금물에서 소금은 무엇일까요?',o:['용질','용매','용액'],a:0,w:'녹는 물질이 용질, 녹이는 물(용매)과 섞여 소금물(용액)이 돼요.'},
+  {q:'설탕 20 g을 물 100 g에 모두 녹이면 설탕물의 무게는?',o:['100 g','120 g','80 g'],a:1,w:'녹아도 설탕은 없어지지 않아서 100 + 20 = 120 g이에요.'},
+  {q:'20 ℃ 물 50 mL에 가장 많이 녹는 것은?',o:['설탕','소금','베이킹 소다'],a:0,w:'설탕은 아주 많이 녹고, 베이킹 소다는 조금밖에 녹지 않아요.'},
+  {q:'다 녹지 않고 남은 백반을 더 녹이려면?',o:['물을 따뜻하게 한다','물을 차갑게 한다','그대로 둔다'],a:0,w:'대부분의 고체 용질은 물 온도가 높을수록 많이 녹아요.'},
+  {q:'같은 방울토마토가 더 높이 뜨는 설탕물은?',o:['더 진한 설탕물','더 묽은 설탕물','둘 다 같다'],a:0,w:'용질이 많이 녹은 진한 용액일수록 물체가 더 높이 떠요.'}],
+ home:{title:'방울토마토 띄우기',steps:['투명한 컵 3개에 물을 같은 양(종이컵 한 컵)씩 담아요.','설탕을 각각 1숟가락, 4숟가락, 8숟가락 넣고 잘 저어 녹여요.','방울토마토를 하나씩 넣고 어느 컵에서 가장 높이 뜨는지 그림으로 그려요.'],warn:'실험한 설탕물은 마시지 말고 버려요.'}},
+
+{id:'micro',sem:1,n:'1학기 5단원',name:'다양한 생물과 우리 생활',color:'var(--moss)',badge:'미생물 박사',
+ hook:'김치를 맛있게 익혀 주는 것도, 빵에 핀 곰팡이도 아주 작은 생물이 하는 일이래. 눈에 잘 보이지 않는 작은 생물들의 세계로 들어가 보자!',
+ points:[
+  {t:'균류: 버섯과 곰팡이',d:'버섯과 곰팡이는 <em>균류</em>예요. 몸이 가는 실 모양의 <em>균사</em>로 되어 있고, <em>포자</em>로 번식해요. 식물처럼 스스로 양분을 만들지 못해서 죽은 생물이나 다른 생물에서 양분을 얻어요. <em>따뜻하고 축축한 곳</em>에서 잘 자라요.'},
+  {t:'원생생물: 짚신벌레와 해캄',d:'동물, 식물, 균류로 나누기 어렵고 생김새가 단순한 생물을 <em>원생생물</em>이라고 해요. <em>짚신벌레</em>는 짚신 모양에 가는 털이 있고, <em>해캄</em>은 초록색의 가늘고 긴 실 모양이에요. 논, 연못처럼 물이 고인 곳에 살고 현미경으로 관찰해요.'},
+  {t:'세균: 아주아주 작은 생물',d:'<em>세균</em>은 맨눈으로 볼 수 없을 만큼 작아요. 모양은 <em>공 모양, 막대 모양, 나선 모양</em> 등이 있어요. 땅, 물, 공기, 우리 몸 등 어디에나 살고, 조건이 알맞으면 짧은 시간에 아주 많이 늘어나요.'},
+  {t:'우리 생활에 주는 영향',d:'<em>이로운 점</em>: 된장, 김치, 요구르트를 만들고(발효), 죽은 생물을 분해해 환경을 깨끗하게 하고, 해캄은 산소를 만들어요. <em>해로운 점</em>: 음식을 상하게 하고, 병을 일으키고, 물건을 썩게 해요.'},
+  {t:'첨단 생명 과학',d:'작은 생물의 특징을 이용해 생활을 돕는 기술이에요. 푸른곰팡이에서 얻은 물질로 병을 고치는 약(<em>항생제</em>)을 만들고, 세균으로 <em>하수를 깨끗하게</em> 처리하고, 해캄 같은 생물로 <em>생물 연료</em>를 만들고, 해충을 없애는 <em>생물 농약</em>을 만들어요.'}],
+ words:[['균류','버섯·곰팡이'],['균사','실 모양의 몸'],['포자','번식하는 작은 알갱이'],['원생생물','짚신벌레·해캄'],['세균','아주 작은 생물'],['발효','이로운 변화']],
+ sim:'sort',simData:{tag:'작은 생물 분류하기',intro:'생물 카드를 고르고 균류, 원생생물, 세균 중 어디에 속하는지 골라 보세요.',
+  bins:['균류','원생생물','세균'],
+  items:[
+   {n:'표고버섯',k:0,why:'버섯은 균사로 이루어진 균류예요.'},
+   {n:'푸른곰팡이',k:0,why:'곰팡이는 포자로 번식하는 균류예요. 항생제의 재료가 되기도 해요.'},
+   {n:'빵에 핀 털곰팡이',k:0,why:'따뜻하고 축축한 빵에서 잘 자라는 균류예요.'},
+   {n:'누룩곰팡이',k:0,why:'된장과 막걸리를 만들 때 쓰는 이로운 균류예요.'},
+   {n:'짚신벌레',k:1,why:'짚신 모양에 가는 털이 있는 원생생물이에요.'},
+   {n:'해캄',k:1,why:'초록색 실 모양의 원생생물로 산소를 만들어요.'},
+   {n:'아메바',k:1,why:'모양이 계속 바뀌는 원생생물이에요.'},
+   {n:'유글레나',k:1,why:'꼬리 같은 털로 헤엄치는 원생생물이에요.'},
+   {n:'젖산균(유산균)',k:2,why:'김치와 요구르트를 만드는 막대 모양 세균이에요.'},
+   {n:'대장균',k:2,why:'사람과 동물의 장에 사는 막대 모양 세균이에요.'},
+   {n:'포도상 구균',k:2,why:'공 모양 세균이 포도송이처럼 모여 있어요. 음식을 상하게 하기도 해요.'},
+   {n:'헬리코박터 파일로리',k:2,why:'위에 사는 나선 모양 세균이에요.'}]},
+ quiz:[
+  {q:'버섯과 곰팡이 같은 생물 무리는?',o:['균류','원생생물','세균'],a:0,w:'균사로 이루어지고 포자로 번식하는 생물이 균류예요.'},
+  {q:'짚신벌레와 해캄 같은 생물 무리는?',o:['균류','원생생물','세균'],a:1,w:'생김새가 단순하고 주로 물에 사는 생물이 원생생물이에요.'},
+  {q:'세균의 모양이 아닌 것은?',o:['공 모양','막대 모양','나뭇잎 모양'],a:2,w:'세균은 공 모양, 막대 모양, 나선 모양 등이 있어요.'},
+  {q:'김치와 된장을 만드는 데 도움을 주는 것은 작은 생물의 어떤 영향일까요?',o:['이로운 영향','해로운 영향'],a:0,w:'작은 생물이 음식 맛을 좋게 바꾸는 것을 발효라고 해요.'},
+  {q:'푸른곰팡이에서 얻은 물질로 만든 것은?',o:['병을 고치는 약(항생제)','플라스틱','유리'],a:0,w:'페니실린이라는 항생제는 푸른곰팡이에서 처음 발견되었어요.'}],
+ home:{title:'빵 곰팡이 관찰 일기',steps:['식빵 한 조각에 물을 몇 방울 떨어뜨리고 지퍼 백에 넣어 꼭 닫아요.','따뜻한 곳에 두고 하루에 한 번, 일주일 동안 색과 모양 변화를 그림으로 그려요.','냉장고에 넣은 빵과 비교해 보면 온도가 곰팡이에 주는 영향도 알 수 있어요.'],warn:'지퍼 백은 절대 열지 말고, 관찰이 끝나면 봉지째 버려요. 곰팡이 포자를 들이마시면 몸에 해로워요.'}},
+
+/* ================= 2학기 ================= */
+{id:'inq2',sem:2,n:'2학기 1단원',name:'과학자처럼 탐구해 볼까요',color:'var(--slate)',badge:'실험 설계자',
+ hook:'종이컵 전화기의 실이 길어지면 소리가 작아질까? 그냥 생각만 하지 말고, 과학자처럼 순서대로 실험해서 답을 찾아보자!',
+ points:[
+  {t:'문제 인식과 가설 설정',d:'궁금한 점을 실험으로 알아볼 수 있는 <em>탐구 문제</em>로 정해요("실이 길수록 소리가 작게 들릴까?"). 그리고 그 답을 미리 생각해 보는 것이 <em>가설</em>이에요("실이 길수록 소리가 작게 들릴 것이다"). 가설은 실험으로 확인할 수 있어야 해요.'},
+  {t:'실험 계획과 변인 통제',d:'<em>다르게 할 조건</em>은 딱 하나(실의 길이)만 정하고, 종이컵 크기, 실 종류, 목소리 크기 같은 나머지는 모두 <em>같게 할 조건</em>으로 해요. 이렇게 조건을 조절하는 것을 <em>변인 통제</em>라고 해요. 그래야 결과가 무엇 때문에 달라졌는지 알 수 있어요.'},
+  {t:'실험하기',d:'계획한 대로 실험하고, 결과는 <em>바로바로 기록</em>해요. 같은 실험을 <em>여러 번</em> 해 보면 더 믿을 수 있어요. 안전 수칙도 꼭 지켜요.'},
+  {t:'자료 변환과 자료 해석',d:'실험 결과를 <em>표나 그래프</em>로 바꾸는 것이 <em>자료 변환</em>이에요. 막대그래프는 크기 비교, 꺾은선그래프는 변화 보기에 좋아요. 표와 그래프에서 규칙이나 관계를 찾는 것이 <em>자료 해석</em>이에요.'},
+  {t:'결론 도출',d:'자료를 해석해 가설이 맞는지 판단하고 탐구 문제의 답을 정리하는 것이 <em>결론 도출</em>이에요. 가설이 틀려도 괜찮아요. <em>가설을 고쳐서 다시 탐구</em>하면 돼요. 결과를 발표하고 새로운 탐구 문제를 찾아요.'}],
+ words:[['가설','미리 생각한 답'],['변인 통제','조건 조절하기'],['다르게 할 조건','하나만'],['자료 변환','표·그래프로'],['결론 도출','답 정리하기']],
+ sim:'order',simData:{tag:'탐구 순서 맞히기',intro:'종이컵 전화기 실험을 과학자처럼 해 봐요. 탐구 단계를 순서대로 눌러 보세요.',
+  steps:[
+   {n:'문제 인식',ex:'"종이컵 전화기의 실이 길수록 소리가 작게 들릴까?"'},
+   {n:'가설 설정',ex:'"실이 길수록 소리가 작게 들릴 것이다."'},
+   {n:'실험 계획',ex:'실 길이만 2 m, 5 m, 10 m로 다르게 하고 종이컵·실 종류·목소리 크기는 같게 해요.'},
+   {n:'실험하기',ex:'길이마다 세 번씩 말해 보고 잘 들린 정도를 바로 적어요.'},
+   {n:'자료 변환',ex:'실 길이에 따라 잘 들린 정도를 표와 막대그래프로 나타내요.'},
+   {n:'자료 해석',ex:'그래프를 보니 실이 길수록 잘 들린 정도가 줄어들어요.'},
+   {n:'결론 도출',ex:'가설이 맞았어요. 실이 길수록 소리가 작게 들려요.'}]},
+ quiz:[
+  {q:'"실이 길수록 소리가 작게 들릴 것이다"는 탐구의 어느 단계일까요?',o:['가설 설정','자료 변환','결론 도출'],a:0,w:'탐구 문제의 답을 미리 생각한 것이 가설이에요.'},
+  {q:'실 길이에 따라 소리를 비교하는 실험에서 다르게 할 조건은?',o:['실의 길이','종이컵의 크기','말하는 목소리 크기'],a:0,w:'알아보려는 것 하나만 다르게 하고 나머지는 모두 같게 해요.'},
+  {q:'위 실험에서 같게 해야 할 조건이 아닌 것은?',o:['종이컵의 크기','실의 종류','실의 길이'],a:2,w:'실의 길이는 다르게 할 조건이에요. 나머지는 모두 같게 해요.'},
+  {q:'측정 결과를 표나 그래프로 바꾸는 과정은?',o:['자료 변환','문제 인식','가설 설정'],a:0,w:'자료를 한눈에 보기 쉽게 바꾸는 것을 자료 변환이라고 해요.'},
+  {q:'실험 결과가 가설과 다르게 나왔다면?',o:['가설을 고쳐 다시 탐구한다','결과를 가설에 맞게 고쳐 적는다','탐구를 그만둔다'],a:0,w:'과학자도 가설이 틀리는 경우가 많아요. 결과를 정직하게 적고 다시 탐구해요.'}],
+ home:{title:'종이컵 전화기 실험',steps:['종이컵 두 개 바닥에 구멍을 뚫고 실을 꿰어 매듭을 지어요(구멍은 어른이 송곳으로).','실 길이를 2 m, 5 m, 10 m로 바꿔 가며 같은 크기 목소리로 말해 봐요.','잘 들린 정도를 1~5점으로 적고 막대그래프로 그려서 결론을 써 봐요.'],warn:'송곳이나 가위는 어른이 다뤄요.'}},
+
+{id:'eco',sem:2,n:'2학기 2단원',name:'생물과 환경',color:'var(--leaf)',badge:'생태 탐험가',
  hook:'우리 동네 논에서 뱀이 갑자기 다 사라진다면 어떤 일이 생길까? 뱀이 무섭다고 좋아할 일만은 아니래. 오늘은 생물들이 서로 어떻게 연결되어 있는지 알아보자!',
  points:[
   {t:'생태계 = 생물 + 생물이 아닌 것',d:'풀, 개구리, 곰팡이 같은 <em>생물 요소</em>와 햇빛, 물, 공기, 흙, 온도 같은 <em>비생물 요소</em>가 서로 영향을 주고받으며 함께 사는 곳이 생태계예요. 연못 하나, 숲 하나도 생태계예요.'},
   {t:'먹고 먹히는 사이',d:'스스로 양분을 만드는 식물은 <em>생산자</em>, 다른 생물을 먹는 동물은 <em>소비자</em>, 죽은 생물을 썩게 해서 흙으로 돌려보내는 곰팡이·세균은 <em>분해자</em>예요. 먹고 먹히는 관계가 한 줄로 이어지면 <em>먹이사슬</em>, 여러 줄이 그물처럼 얽히면 <em>먹이그물</em>이에요.'},
-  {t:'균형과 적응',d:'생물의 수가 알맞게 유지되는 상태를 <em>생태계 평형</em>이라고 해요. 그리고 생물은 사는 곳에 맞게 모습과 생활 방식이 바뀌어 왔어요. 사막의 선인장은 잎이 가시로 변해 물을 아끼고, 북극여우는 털이 두껍고 귀가 작아 열을 덜 빼앗겨요. 이것을 <em>적응</em>이라고 해요.'}],
- words:[['생산자','양분을 스스로 만듦'],['소비자','다른 생물을 먹음'],['분해자','죽은 것을 분해'],['먹이그물','먹이사슬이 얽힘'],['적응','환경에 맞게 변함']],
+  {t:'생태계 평형',d:'생물의 종류와 수가 알맞게 유지되는 상태를 <em>생태계 평형</em>이라고 해요. 미국의 한 국립공원에서 늑대가 사라지자 사슴이 크게 늘어 풀과 나무가 줄었어요. 늑대를 다시 데려오자 생태계가 차츰 회복되었어요.'},
+  {t:'햇빛·물·온도가 생물에 주는 영향',d:'햇빛을 받은 콩나물은 떡잎이 <em>초록색</em>이 되고, 어둠 속 콩나물은 떡잎이 <em>노랗고</em> 몸통이 가늘고 길게 자라요. 물을 주지 않으면 시들어요. 온도가 낮아지면 나뭇잎에 단풍이 들고 떨어지며, 어떤 동물은 <em>겨울잠</em>을 자고 철새는 따뜻한 곳으로 이동해요.'},
+  {t:'적응: 환경에 맞게 살아가기',d:'생물은 사는 곳에 맞게 모습과 생활 방식이 바뀌어 왔어요. 사막의 선인장은 잎이 <em>가시</em>로 변해 물을 아끼고, 북극여우는 털이 두껍고 귀가 작아 열을 덜 빼앗겨요. 대벌레는 나뭇가지처럼 생겨 몸을 숨겨요. 이것을 <em>적응</em>이라고 해요.'},
+  {t:'환경 오염과 생태계 보전',d:'쓰레기, 공장 폐수, 자동차 매연, 지나친 농약은 <em>대기·수질·토양 오염</em>을 일으켜 생물이 살 곳을 망가뜨려요. 일회용품 줄이기, 분리배출, 대중교통 이용, 생물 서식지 보호처럼 <em>생태계를 보전</em>하는 일에 함께해요.'}],
+ words:[['생산자','양분을 스스로 만듦'],['소비자','다른 생물을 먹음'],['분해자','죽은 것을 분해'],['먹이그물','먹이사슬이 얽힘'],['생태계 평형','알맞게 유지'],['적응','환경에 맞게 변함']],
  sim:'eco',
  quiz:[
   {q:'햇빛, 물, 공기, 흙처럼 살아 있지 않은 것을 무엇이라고 할까요?',o:['생물 요소','비생물 요소','분해자'],a:1,w:'살아 있지 않은 것은 비생물 요소예요. 그래도 생물이 사는 데 꼭 필요하답니다.'},
   {q:'곰팡이와 세균은 생태계에서 어떤 역할을 할까요?',o:['생산자','소비자','분해자'],a:2,w:'죽은 생물과 배출물을 분해해서 흙을 기름지게 하는 분해자예요. 분해자가 없으면 세상이 쓰레기로 가득 찰 거예요.'},
   {q:'먹이사슬 여러 개가 그물처럼 얽혀 있는 것은?',o:['먹이그물','먹이피라미드','생태계 평형'],a:0,w:'한 동물이 여러 가지를 먹고, 여러 동물에게 먹히기도 해서 그물 모양이 돼요.'},
-  {q:'선인장 잎이 가시 모양으로 변한 까닭은?',o:['동물을 사냥하려고','물이 몸 밖으로 덜 빠져나가게 하려고','햇빛을 더 많이 받으려고'],a:1,w:'잎이 넓으면 물이 많이 증발해요. 물이 귀한 사막에서 살아남기 위한 적응이에요.'}],
+  {q:'선인장 잎이 가시 모양으로 변한 까닭은?',o:['동물을 사냥하려고','물이 몸 밖으로 덜 빠져나가게 하려고','햇빛을 더 많이 받으려고'],a:1,w:'잎이 넓으면 물이 많이 증발해요. 물이 귀한 사막에서 살아남기 위한 적응이에요.'},
+  {q:'햇빛을 받지 못하고 자란 콩나물의 모습은?',o:['떡잎이 노랗고 몸통이 가늘고 길다','떡잎이 초록색이고 몸통이 굵다','전혀 자라지 않는다'],a:0,w:'햇빛이 없으면 떡잎이 초록색으로 변하지 못하고, 빛을 찾아 길쭉하게 자라요.'},
+  {q:'생태계를 보전하는 방법으로 알맞은 것은?',o:['일회용품을 많이 쓴다','쓰레기를 분리배출한다','농약을 많이 뿌린다'],a:1,w:'쓰레기를 줄이고 바르게 버리면 오염을 줄일 수 있어요.'}],
  home:{title:'동네 생태계 빙고',steps:['종이에 3×3 칸을 그려요.','산책하면서 생산자, 소비자, 분해자(버섯, 이끼 아래 썩은 잎), 비생물 요소를 찾아 칸에 적어요.','찾은 것들로 먹이사슬을 하나 만들어 화살표로 이어 보세요.'],warn:''}},
 
-{id:'weather',n:'2단원',name:'날씨와 우리 생활',color:'var(--sky)',badge:'날씨 박사',
+{id:'weather',sem:2,n:'2학기 3단원',name:'날씨와 우리 생활',color:'var(--sky)',badge:'날씨 박사',
  hook:'여름 바닷가에서 낮에는 바다 쪽에서 시원한 바람이 불어오는데, 밤에는 반대로 육지에서 바다로 바람이 분대. 바람이 왜 방향을 바꿀까?',
  points:[
-  {t:'습도와 이슬·안개·구름',d:'공기 속에 수증기가 들어 있는 정도가 <em>습도</em>예요. 수증기가 차가워지면 작은 물방울로 바뀌어요. 차가운 풀잎에 맺히면 <em>이슬</em>, 땅 가까운 공기에 떠 있으면 <em>안개</em>, 하늘 높이 올라가 생기면 <em>구름</em>이에요. 얼음물 컵 겉에 물방울이 생기는 것도 같은 원리예요.'},
-  {t:'바람은 무거운 쪽에서 가벼운 쪽으로',d:'차가운 공기는 무거워서 누르는 힘이 커요. 이런 곳이 <em>고기압</em>, 따뜻하고 가벼운 공기가 있는 곳이 <em>저기압</em>이에요. 바람은 언제나 <em>고기압에서 저기압으로</em> 불어요.'},
-  {t:'바닷가 바람과 계절 날씨',d:'낮에는 육지가 바다보다 빨리 데워져 바다에서 육지로 <em>해풍</em>이, 밤에는 육지가 빨리 식어 육지에서 바다로 <em>육풍</em>이 불어요. 우리나라 겨울에는 북서쪽의 <em>차갑고 건조한</em> 공기가, 여름에는 남동쪽의 <em>덥고 습한</em> 공기가 와서 날씨가 달라져요.'}],
- words:[['습도','공기 속 수증기 정도'],['고기압','무겁게 누르는 공기'],['저기압','가볍게 누르는 공기'],['해풍','낮, 바다→육지'],['육풍','밤, 육지→바다']],
+  {t:'습도와 우리 생활',d:'공기 속에 수증기가 들어 있는 정도가 <em>습도</em>예요. <em>건습구 습도계</em>로 재는데, 건구 온도와 두 온도의 차이를 <em>습도표</em>에서 찾아 읽어요. 습도가 높으면 곰팡이가 피고 음식이 쉽게 상해서 <em>제습기</em>를, 낮으면 피부가 건조하고 산불이 나기 쉬워서 <em>가습기</em>를 써요.'},
+  {t:'이슬, 안개, 구름',d:'수증기가 차가워지면 작은 물방울로 바뀌어요(응결). 차가운 풀잎에 맺히면 <em>이슬</em>, 땅 가까운 공기에 떠 있으면 <em>안개</em>, 공기가 하늘 높이 올라가 차가워져 생기면 <em>구름</em>이에요. 얼음물 컵 겉에 물방울이 생기는 것도 같은 원리예요.'},
+  {t:'비와 눈',d:'구름 속 작은 물방울이 서로 합쳐져 <em>커지고 무거워지면</em> 떨어지는데, 이것이 <em>비</em>예요. 구름 속 얼음 알갱이가 커져서 <em>녹지 않은 채</em> 떨어지면 <em>눈</em>, 떨어지다가 녹으면 비가 돼요.'},
+  {t:'바람은 무거운 쪽에서 가벼운 쪽으로',d:'같은 부피일 때 <em>차가운 공기가 따뜻한 공기보다 무거워요</em>. 공기가 누르는 힘이 <em>기압</em>인데, 무거운 공기가 있는 곳은 <em>고기압</em>, 가벼운 공기가 있는 곳은 <em>저기압</em>이에요. 바람은 언제나 <em>고기압에서 저기압으로</em> 불어요.'},
+  {t:'바닷가의 바람',d:'낮에는 육지가 바다보다 빨리 데워져 바다에서 육지로 <em>해풍</em>이, 밤에는 육지가 빨리 식어 육지에서 바다로 <em>육풍</em>이 불어요.'},
+  {t:'계절별 날씨와 공기 덩어리',d:'우리나라에 오는 공기 덩어리에 따라 날씨가 달라져요. <em>겨울</em>은 북서쪽 대륙의 <em>차갑고 건조한</em> 공기, <em>여름</em>은 남동쪽 바다의 <em>덥고 습한</em> 공기, <em>봄·가을</em>은 남서쪽 대륙의 <em>따뜻하고 건조한</em> 공기, <em>초여름</em>은 북동쪽 바다의 <em>차고 습한</em> 공기의 영향을 받아요.'}],
+ words:[['습도','공기 속 수증기 정도'],['응결','수증기→물방울'],['고기압','무겁게 누르는 공기'],['저기압','가볍게 누르는 공기'],['해풍','낮, 바다→육지'],['육풍','밤, 육지→바다']],
  sim:'weather',
  quiz:[
   {q:'공기 중에 수증기가 포함된 정도를 무엇이라고 할까요?',o:['기온','습도','기압'],a:1,w:'습도는 건습구 습도계로 잴 수 있어요. 습도가 높으면 빨래가 잘 안 말라요.'},
   {q:'맑은 날 새벽, 차가운 풀잎에 맺힌 물방울은?',o:['이슬','안개','구름'],a:0,w:'밤새 차가워진 풀잎에 수증기가 닿아 물방울이 된 것이 이슬이에요.'},
   {q:'바람은 어디에서 어디로 불까요?',o:['저기압 → 고기압','고기압 → 저기압','항상 북쪽 → 남쪽'],a:1,w:'무겁게 누르는 고기압에서 가벼운 저기압 쪽으로 공기가 밀려가요.'},
   {q:'맑은 날 낮, 바닷가에서 부는 바람은?',o:['바다에서 육지로 부는 해풍','육지에서 바다로 부는 육풍'],a:0,w:'낮에는 육지가 빨리 데워져 육지 위가 저기압이 돼요. 그래서 바다에서 육지로 바람이 불어요.'},
-  {q:'우리나라 겨울, 북서쪽에서 오는 공기의 성질은?',o:['덥고 습하다','차갑고 건조하다','따뜻하고 건조하다'],a:1,w:'대륙에서 오는 차갑고 건조한 공기 때문에 겨울은 춥고 건조해요.'}],
+  {q:'우리나라 겨울, 북서쪽에서 오는 공기의 성질은?',o:['덥고 습하다','차갑고 건조하다','따뜻하고 건조하다'],a:1,w:'대륙에서 오는 차갑고 건조한 공기 때문에 겨울은 춥고 건조해요.'},
+  {q:'장마철처럼 습도가 높을 때 집에서 쓰면 좋은 기구는?',o:['제습기','가습기','선풍기 바람만'],a:0,w:'제습기는 공기 속 수증기를 줄여서 곰팡이가 생기지 않게 도와요.'},
+  {q:'비는 어떻게 내릴까요?',o:['구름 속 물방울이 합쳐져 무거워지면 떨어진다','하늘에 있는 바다에서 쏟아진다','바람이 바닷물을 날려 보낸다'],a:0,w:'작은 물방울이 커지고 무거워지면 더 떠 있지 못하고 떨어져요.'}],
  home:{title:'컵으로 이슬 만들기',steps:['유리컵에 얼음물을 가득 담아요.','컵 바깥을 마른 휴지로 닦고 5분 기다려요.','컵 겉면에 생긴 물방울을 관찰해요. 이 물은 컵 안에서 새어 나온 걸까, 공기 속에서 온 걸까? 컵 안 물에 물감을 타서 확인해 봐요.'],warn:''}},
 
-{id:'motion',n:'3단원',name:'물체의 운동',color:'var(--rush)',badge:'스피드 측정관',
+{id:'motion',sem:2,n:'2학기 4단원',name:'물체의 운동',color:'var(--rush)',badge:'스피드 측정관',
  hook:'달리기 시합에서 50 m를 10초에 뛴 친구와 90 m를 15초에 뛴 친구가 있어. 거리도 시간도 다른데, 누가 더 빠른 걸까? 오늘은 "빠르기"를 숫자로 재는 법을 배워 보자!',
  points:[
   {t:'운동이란 위치가 바뀌는 것',d:'시간이 지나면서 물체의 위치가 바뀌면 <em>운동한다</em>고 해요. 운동은 <em>걸린 시간</em>과 <em>이동 거리</em>로 나타내요. "자전거가 10초 동안 50 m를 이동했다"처럼요.'},
-  {t:'빠르기를 비교하는 세 가지 방법',d:'같은 거리를 갔다면 <em>시간이 짧을수록</em> 빨라요. 같은 시간 동안 갔다면 <em>거리가 길수록</em> 빨라요. 거리도 시간도 다르다면 속력을 계산해서 비교해요.'},
-  {t:'속력 = 이동 거리 ÷ 걸린 시간',d:'1초(또는 1시간) 동안 이동한 거리가 <em>속력</em>이에요. 단위는 m/s(미터 매 초), km/h(킬로미터 매 시)를 써요. 속력이 빠를수록 멈추기 어려워서 <em>안전띠, 에어백, 어린이 보호 구역(시속 30 km)</em> 같은 안전장치가 필요해요.'}],
+  {t:'여러 가지 빠르기의 운동',d:'자동계단(에스컬레이터)이나 케이블카처럼 <em>빠르기가 일정한</em> 운동도 있고, 롤러코스터나 이륙하는 비행기처럼 <em>빠르기가 변하는</em> 운동도 있어요.'},
+  {t:'빠르기를 비교하는 방법',d:'같은 거리를 갔다면 <em>시간이 짧을수록</em> 빨라요. 같은 시간 동안 갔다면 <em>거리가 길수록</em> 빨라요. 거리도 시간도 다르다면 속력을 계산해서 비교해요.'},
+  {t:'속력 = 이동 거리 ÷ 걸린 시간',d:'1초(또는 1시간) 동안 이동한 거리가 <em>속력</em>이에요. 단위는 m/s(미터 매 초), km/h(킬로미터 매 시)를 써요. 120 m를 20초에 갔다면 120 ÷ 20 = <em>6 m/s</em>예요.'},
+  {t:'속력과 안전',d:'속력이 빠를수록 멈추기 어렵고 부딪혔을 때 더 위험해요. 그래서 <em>안전띠, 에어백, 과속 방지 턱, 어린이 보호 구역(시속 30 km)</em> 같은 안전장치가 있어요. 횡단보도에서는 좌우를 살피고, 도로에서 공놀이를 하지 않아요.'}],
  words:[['이동 거리','움직인 길이'],['걸린 시간','움직인 동안'],['속력','거리 ÷ 시간'],['m/s','1초에 몇 m'],['km/h','1시간에 몇 km']],
  sim:'motion',
  quiz:[
@@ -211,15 +401,18 @@ const UNITS=[
   {q:'120 m를 20초 동안 달렸다면 속력은?',o:['6 m/s','100 m/s','2400 m/s'],a:0,w:'120 ÷ 20 = 6. 1초에 6 m씩 이동한 셈이에요.'},
   {q:'모두 100 m를 달렸어요. 누가 가장 빠를까요?',o:['20초 걸린 친구','16초 걸린 친구','25초 걸린 친구'],a:1,w:'같은 거리라면 걸린 시간이 가장 짧은 친구가 가장 빨라요.'},
   {q:'어린이 보호 구역에서 자동차의 제한 속력은 보통 얼마일까요?',o:['시속 30 km','시속 60 km','시속 100 km'],a:0,w:'속력이 느리면 갑자기 아이가 나타나도 멈출 수 있어서 시속 30 km로 정해져 있어요.'},
-  {q:'자동차가 급히 멈출 때 안전띠가 하는 일은?',o:['차를 더 빨리 달리게 한다','몸이 앞으로 튀어 나가지 않게 잡아 준다','에어컨을 켠다'],a:1,w:'차가 멈춰도 몸은 계속 앞으로 가려고 해요. 안전띠가 몸을 붙잡아 줘요.'}],
+  {q:'자동차가 급히 멈출 때 안전띠가 하는 일은?',o:['차를 더 빨리 달리게 한다','몸이 앞으로 튀어 나가지 않게 잡아 준다','에어컨을 켠다'],a:1,w:'차가 멈춰도 몸은 계속 앞으로 가려고 해요. 안전띠가 몸을 붙잡아 줘요.'},
+  {q:'빠르기가 거의 일정한 운동은?',o:['자동계단(에스컬레이터)','롤러코스터','이륙하는 비행기'],a:0,w:'자동계단은 같은 빠르기로 움직여서 안전하게 탈 수 있어요.'}],
  home:{title:'우리 가족 속력 재기',steps:['공원이나 운동장에서 줄자(또는 걸음 수)로 20 m를 재고 출발선과 도착선을 표시해요.','스마트폰 스톱워치로 걷기, 뛰기, 뒤로 걷기 시간을 재요.','이동 거리 ÷ 걸린 시간으로 각자의 속력을 계산하고 표로 정리해요.'],warn:'차가 다니지 않는 곳에서만 해요.'}},
 
-{id:'acid',n:'4단원',name:'산과 염기',color:'var(--berry)',badge:'용액 감별사',
+{id:'acid',sem:2,n:'2학기 5단원',name:'산과 염기',color:'var(--berry)',badge:'용액 감별사',
  hook:'보라색 양배추 물에 식초를 넣으면 분홍색, 비눗물을 넣으면 초록색이 된대. 마법 같지만 과학이야! 색깔로 용액의 성질을 알아내는 탐정이 되어 보자.',
  points:[
+  {t:'여러 가지 용액 분류하기',d:'용액은 <em>색깔, 냄새, 투명한 정도, 흔들었을 때 거품이 오래 남는지</em> 등으로 분류할 수 있어요. 이때도 누가 해도 같은 결과가 나오는 기준을 써요. 냄새는 손으로 바람을 일으켜 맡아요.'},
   {t:'지시약은 용액의 성질을 알려 주는 색깔 신호',d:'<em>리트머스 종이</em>: 산성은 푸른 종이를 붉게, 염기성은 붉은 종이를 푸르게 바꿔요. <em>페놀프탈레인 용액</em>은 염기성에서만 붉게 변해요. <em>붉은 양배추 지시약</em>은 산성에서 붉은 계열, 염기성에서 푸른색·초록색·노란색 계열로 변해요.'},
   {t:'산과 염기는 서로 다른 것을 녹여요',d:'<em>산성</em> 용액(묽은 염산)은 대리암 조각과 달걀 껍데기를 녹이며 거품을 내요. <em>염기성</em> 용액(묽은 수산화 나트륨 용액)은 두부와 삶은 달걀 흰자를 녹여 흐물흐물하게 만들어요.'},
-  {t:'섞으면 서로 약해져요',d:'산성 용액에 염기성 용액을 계속 넣으면 산성이 <em>점점 약해지다가</em> 염기성으로 바뀌어요. 그래서 속이 쓰릴 때 염기성 제산제를 먹고, 생선 비린내(염기성)를 레몬즙(산성)으로 줄여요.'}],
+  {t:'섞으면 서로 약해져요',d:'산성 용액에 염기성 용액을 계속 넣으면 산성이 <em>점점 약해지다가</em> 염기성으로 바뀌어요. 반대도 마찬가지예요.'},
+  {t:'생활 속 산과 염기',d:'<em>산성</em>: 생선 비린내를 줄이는 레몬즙·식초, 변기의 때를 없애는 변기용 세제. <em>염기성</em>: 속쓰림을 줄이는 제산제, 머리카락 등으로 막힌 하수구를 뚫는 세제, 유리 세정제. 세제는 위험하니 어른이 사용해요.'}],
  words:[['지시약','색으로 성질 표시'],['산성','리트머스 푸른→붉은'],['염기성','리트머스 붉은→푸른'],['페놀프탈레인','염기에서 붉게']],
  sim:'acid',
  quiz:[
@@ -227,8 +420,9 @@ const UNITS=[
   {q:'페놀프탈레인 용액을 넣었더니 붉게 변했어요. 이 용액은?',o:['식초','석회수','레몬즙'],a:1,w:'페놀프탈레인은 염기성에서만 붉어져요. 석회수는 염기성이에요.'},
   {q:'대리암 조각을 넣었더니 거품이 나며 녹았어요. 어떤 용액일까요?',o:['묽은 염산(산성)','묽은 수산화 나트륨 용액(염기성)'],a:0,w:'산성 용액은 대리암, 달걀 껍데기를 녹이며 기체 거품을 만들어요.'},
   {q:'생선 요리에 레몬즙을 뿌리는 까닭은?',o:['산성인 레몬즙이 비린내를 줄여서','레몬즙이 생선을 익혀서','색깔을 예쁘게 하려고'],a:0,w:'비린내를 내는 물질은 염기성이라 산성인 레몬즙과 만나면 약해져요.'},
-  {q:'산성 용액에 염기성 용액을 조금씩 계속 넣으면?',o:['산성이 점점 강해진다','산성이 점점 약해진다','아무 변화가 없다'],a:1,w:'서로의 성질을 약하게 만들어서, 계속 넣으면 결국 염기성으로 바뀌어요.'}],
- home:{title:'붉은 양배추 지시약 만들기',steps:['붉은 양배추 잎 2~3장을 잘게 찢어 그릇에 넣어요.','어른이 따뜻한 물을 부어 주면 10분 기다렸다가 체로 걸러 보라색 물만 모아요.','투명한 컵 여러 개에 지시약을 조금씩 담고 식초, 레몬즙, 사이다, 베이킹소다 물, 비눗물을 각각 넣어 색을 비교해요.'],warn:'뜨거운 물은 꼭 어른이 다뤄요. 락스·변기 세제 같은 강한 세제는 쓰지 말고, 여러 세제를 서로 섞지 마세요. 다 쓴 용액은 마시지 말고 버려요.'}}
+  {q:'산성 용액에 염기성 용액을 조금씩 계속 넣으면?',o:['산성이 점점 강해진다','산성이 점점 약해진다','아무 변화가 없다'],a:1,w:'서로의 성질을 약하게 만들어서, 계속 넣으면 결국 염기성으로 바뀌어요.'},
+  {q:'용액을 분류하는 기준으로 알맞지 않은 것은?',o:['투명한가?','냄새가 나는가?','내가 좋아하는 용액인가?'],a:2,w:'좋아하는지는 사람마다 달라서 분류 기준이 될 수 없어요.'}],
+ home:{title:'붉은 양배추 지시약 만들기',steps:['붉은 양배추 잎 2~3장을 잘게 찢어 그릇에 넣어요.','어른이 따뜻한 물을 부어 주면 10분 기다렸다가 체로 걸러 보라색 물만 모아요.','투명한 컵 여러 개에 지시약을 조금씩 담고 식초, 레몬즙, 사이다, 베이킹 소다 물, 비눗물을 각각 넣어 색을 비교해요.'],warn:'뜨거운 물은 꼭 어른이 다뤄요. 락스·변기 세제 같은 강한 세제는 쓰지 말고, 여러 세제를 서로 섞지 마세요. 다 쓴 용액은 마시지 말고 버려요.'}}
 ];
 
 /* ---------- 별 저장 ---------- */
@@ -242,32 +436,41 @@ function refreshStars(){
   document.getElementById('starTotal').textContent=total;
   renderTabs();
 }
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 
-/* ---------- 탭 ---------- */
-let current=UNITS[0].id;
+/* ---------- 학기·단원 탭 ---------- */
+let current='inq1';
 const fromHash=(location.hash||'').slice(1);
 if(UNITS.some(u=>u.id===fromHash))current=fromHash;
 else{try{const s=localStorage.getItem('sci5-tab');if(UNITS.some(u=>u.id===s))current=s}catch(e){}}
+const cur=()=>UNITS.find(u=>u.id===current);
 
+function pick(id){current=id;try{localStorage.setItem('sci5-tab',current)}catch(e){}renderTabs();renderUnit()}
 function renderTabs(){
+  const sem=cur().sem;
+  document.getElementById('sems').innerHTML=[1,2].map(s=>{
+    const us=UNITS.filter(u=>u.sem===s),st=us.reduce((a,u)=>a+unitStars(u),0),tt=us.reduce((a,u)=>a+u.quiz.length,0);
+    return `<button class="sem" data-s="${s}" aria-pressed="${s===sem}">${s}학기<small>별 ${st}/${tt}</small></button>`}).join('');
+  document.querySelectorAll('.sem').forEach(b=>b.onclick=()=>{const s=+b.dataset.s;if(s!==sem)pick(UNITS.find(u=>u.sem===s).id)});
   const el=document.getElementById('tabs');
-  el.innerHTML=UNITS.map(u=>{
+  el.innerHTML=UNITS.filter(u=>u.sem===sem).map(u=>{
     const s=unitStars(u),full=s===u.quiz.length;
     return `<button class="tab" role="tab" id="tab-${u.id}" style="--u:${u.color}" aria-selected="${u.id===current}" data-id="${u.id}">
-      <span class="n">${u.n}</span><span class="t">${u.name}</span><span class="b">별 ${s} / ${u.quiz.length}</span>
+      <span class="n">${u.n.replace(/^\d학기 /,'')}</span><span class="t">${u.name}</span><span class="b">별 ${s} / ${u.quiz.length}</span>
       ${full?`<span class="badge">${u.badge}</span>`:''}</button>`}).join('');
-  el.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{current=b.dataset.id;try{localStorage.setItem('sci5-tab',current)}catch(e){}renderTabs();renderUnit()});
+  el.querySelectorAll('.tab').forEach(b=>b.onclick=()=>pick(b.dataset.id));
+  const sel=el.querySelector('[aria-selected="true"]');if(sel&&el.scrollWidth>el.clientWidth)el.scrollLeft=sel.offsetLeft-16;
 }
 
 /* ---------- 단원 ---------- */
 function renderUnit(){
-  const u=UNITS.find(x=>x.id===current);
+  const u=cur();
   const m=document.getElementById('unit');
   m.className='unit';m.style.setProperty('--u',u.color);
   m.innerHTML=`
   <section class="hero"><div class="ey">${u.n}</div><h2>${u.name}</h2>
     <div class="talk">${OWL}<p><b class="disp">궁금 박사</b><br>${u.hook}</p></div></section>
-  <section class="sec"><h3>꼭 알아야 할 3가지 <span class="tag">핵심 개념</span></h3>
+  <section class="sec"><h3>꼭 알아야 할 ${u.points.length}가지 <span class="tag">핵심 개념</span></h3>
     <div class="points">${u.points.map((p,i)=>`<div class="pt"><div class="k">${i+1}</div><div><b>${p.t}</b><span>${p.d}</span></div></div>`).join('')}</div>
     <div class="words">${u.words.map(w=>`<span class="word"><b>${w[0]}</b> · ${w[1]}</span>`).join('')}</div></section>
   <section class="sec" id="sim"></section>
@@ -275,7 +478,7 @@ function renderUnit(){
     <div class="row" style="margin-top:12px"><button class="btn" id="retry">틀린 문제 다시 풀기</button><span class="note" id="qsum"></span></div></section>
   <section class="sec home"><h3>집에서 해보기 <span class="tag">${u.home.title}</span></h3>
     <ol>${u.home.steps.map(s=>`<li>${s}</li>`).join('')}</ol>${u.home.warn?`<div class="warn"><b>안전</b> ${u.home.warn}</div>`:''}</section>`;
-  SIMS[u.sim](document.getElementById('sim'));
+  SIMS[u.sim](document.getElementById('sim'),u);
   renderQuiz(u);
   document.getElementById('retry').onclick=()=>{u.quiz.forEach((_,i)=>{if(answers[u.id+i]===false)delete answers[u.id+i]});save();renderQuiz(u);refreshStars()};
 }
@@ -286,12 +489,11 @@ function renderQuiz(u){
     const st=answers[u.id+i];
     const done=st!==undefined;
     return `<div class="q"><div class="qt">Q${i+1}. ${q.q}</div><div class="opts">${q.o.map((o,j)=>{
-      let c='';if(done){if(j===q.a&&st)c='right';}
+      const c=done&&st&&j===q.a?'right':'';
       return `<button class="opt ${c}" data-i="${i}" data-j="${j}" ${done?'disabled':''}>${o}</button>`}).join('')}</div>
       ${done?`<div class="feedback ${st?'good':'oops'}"><b>${st?'정답!':'아쉬워요.'}</b> ${st?'':'정답은 "'+q.o[q.a]+'" 이에요. '}${q.w}</div>`:''}</div>`}).join('');
   box.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>{
     const i=+b.dataset.i,j=+b.dataset.j;answers[u.id+i]=(j===u.quiz[i].a);save();renderQuiz(u);refreshStars();
-    if(answers[u.id+i])b.classList.add('right');
   });
   const s=unitStars(u);
   document.getElementById('qsum').textContent=s===u.quiz.length?`모두 맞혔어요! "${u.badge}" 배지를 받았어요.`:`${u.quiz.length}문제 중 ${s}개 맞힘`;
@@ -299,6 +501,167 @@ function renderQuiz(u){
 
 /* ---------- 놀이 실험실 ---------- */
 const SIMS={
+/* 카드 분류 (탐구 기능, 작은 생물) */
+sort(el,u){
+  const c=u.simData,items=shuffle(c.items);let sel=null;const done={};
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">${c.tag}</span></h3><p>${c.intro}</p>
+   <div class="bottles" id="items" style="margin-top:12px"></div>
+   <div id="choose" style="margin-top:12px"></div>
+   <div id="sfb"></div>
+   <div class="bins">${c.bins.map((b,i)=>`<div class="bin"><h4>${b}</h4><div id="bin${i}"></div></div>`).join('')}</div>`;
+  const $=s=>el.querySelector(s);
+  function draw(){
+    $('#items').innerHTML=items.map((it,i)=>`<button class="bottle ${done[i]?'done':''}" aria-pressed="${sel===i}" data-i="${i}" ${done[i]?'disabled':''}>${it.n}</button>`).join('');
+    el.querySelectorAll('#items .bottle:not([disabled])').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;$('#sfb').innerHTML='';draw()});
+    $('#choose').innerHTML=sel===null?'<span class="note">위에서 카드를 하나 골라 주세요.</span>'
+      :`<div class="row"><span class="note"><b>${items[sel].n}</b> →</span>${c.bins.map((b,k)=>`<button class="btn" data-k="${k}">${b}</button>`).join('')}</div>`;
+    el.querySelectorAll('#choose [data-k]').forEach(b=>b.onclick=()=>put(+b.dataset.k));
+    c.bins.forEach((_,k)=>$('#bin'+k).innerHTML=items.map((it,i)=>done[i]&&it.k===k?`<span class="chip u">${it.n}</span>`:'').join(''));
+  }
+  function put(k){
+    const it=items[sel];
+    if(it.k===k){done[sel]=true;sel=null;$('#sfb').innerHTML=`<div class="feedback good"><b>정답!</b> ${it.why}</div>`}
+    else $('#sfb').innerHTML=`<div class="feedback oops"><b>다시 생각해 봐요.</b> "${c.bins[k]}"는 아니에요. 핵심 개념을 다시 읽어 보고 골라 보세요.</div>`;
+    if(Object.keys(done).length===items.length)$('#sfb').innerHTML=`<div class="feedback good"><b>모두 분류했어요!</b> ${it.why}</div>`;
+    draw();
+  }
+  draw();
+},
+
+/* 순서 맞히기 (탐구 과정) */
+order(el,u){
+  const c=u.simData,pool=shuffle(c.steps.map(s=>s.n));let picked=[];
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">${c.tag}</span></h3><p>${c.intro}</p>
+   <div class="row" id="pool" style="margin-top:10px"></div>
+   <div class="chain" id="chain"></div>
+   <div class="row"><button class="btn" id="reset">처음부터</button></div>
+   <div id="ofb"></div>`;
+  const $=s=>el.querySelector(s);
+  function draw(){
+    $('#pool').innerHTML=pool.map(n=>`<button class="btn" data-n="${n}" ${picked.includes(n)?'disabled':''}>${n}</button>`).join('');
+    $('#chain').innerHTML=picked.length?picked.map((n,i)=>`${i?'<span class="arr">→</span>':''}<span class="slot">${n}</span>`).join(''):'<span class="note">여기에 탐구 순서가 쌓여요</span>';
+    el.querySelectorAll('#pool button:not([disabled])').forEach(b=>b.onclick=()=>{
+      const n=b.dataset.n,want=c.steps[picked.length];
+      if(n!==want.n){$('#ofb').innerHTML=`<div class="feedback oops"><b>${n}</b>은(는) 아직 차례가 아니에요. ${picked.length?`<b>${picked[picked.length-1]}</b> 다음에는 무엇을 해야 할까요?`:'탐구는 궁금한 점을 찾는 것부터 시작해요.'}</div>`;return}
+      picked.push(n);
+      $('#ofb').innerHTML=`<div class="feedback good"><b>${n}</b> ${want.ex}</div>`;
+      draw();
+      if(picked.length===c.steps.length)$('#ofb').innerHTML=`<div class="feedback good"><b>완성! 과학자처럼 탐구하는 순서예요.</b><ol class="steps">${c.steps.map(s=>`<li><b>${s.n}</b> ${s.ex}</li>`).join('')}</ol></div>`;
+    });
+  }
+  $('#reset').onclick=()=>{picked=[];$('#ofb').innerHTML='';draw()};
+  draw();
+},
+
+/* 온도와 열: 전도 경주 + 냉난방기 위치 */
+heat(el){
+  const R=[{n:'구리',v:1},{n:'철',v:.45},{n:'유리',v:.12}];let guess=null,raf=0;
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">열 전달 경주</span></h3>
+   <p>세 막대의 왼쪽 끝을 똑같이 가열해요. 열이 어느 막대에서 가장 빨리 오른쪽 끝까지 갈지 골라 보세요.</p>
+   <div class="row" style="margin-top:10px"><span class="note">내 예상:</span>${R.map((r,i)=>`<button class="btn" data-g="${i}">${r.n}</button>`).join('')}</div>
+   <div class="rods">${R.map((r,i)=>`<div class="rod"><span class="disp">${r.n}</span><div class="bar2"><i class="hot" id="h${i}"></i></div></div>`).join('')}</div>
+   <div class="row" style="margin-top:10px;justify-content:space-between"><button class="btn solid" id="go" disabled>가열 시작</button><span class="note">왼쪽 끝 = 불</span></div>
+   <div id="hfb"></div>
+   <h3 class="disp sub3">냉난방기는 어디에 둘까?</h3>
+   <p class="note">대류를 떠올리며 골라 보세요.</p>
+   <div class="row" style="margin-top:8px"><span>난방기:</span><button class="btn" data-q="heat-low">낮은 곳</button><button class="btn" data-q="heat-high">높은 곳</button></div>
+   <div class="row" style="margin-top:8px"><span>에어컨:</span><button class="btn" data-q="cool-low">낮은 곳</button><button class="btn" data-q="cool-high">높은 곳</button></div>
+   <div id="cfb"></div>`;
+  const $=s=>el.querySelector(s);
+  el.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{guess=+b.dataset.g;el.querySelectorAll('[data-g]').forEach(x=>x.classList.toggle('solid',x===b));$('#go').disabled=false});
+  $('#go').onclick=()=>{
+    cancelAnimationFrame(raf);$('#hfb').innerHTML='';const start=performance.now();
+    const step=now=>{const t=(now-start)/1000;
+      R.forEach((r,i)=>$('#h'+i).style.width=Math.min(100,r.v*t*25)+'%');
+      if(t<6)raf=requestAnimationFrame(step);
+      else $('#hfb').innerHTML=`<div class="feedback ${guess===0?'good':'oops'}"><b>${guess===0?'예상 적중!':'앗, 예상과 달라요.'}</b> 열은 <b>구리</b>에서 가장 빨리, 그다음 철, 유리 순서로 이동해요. 같은 고체라도 물질에 따라 열이 이동하는 빠르기가 달라요. 냄비 바닥은 열이 잘 통하는 금속으로, 손잡이는 열이 잘 안 통하는 물질로 만드는 까닭이에요.</div>`;
+    };raf=requestAnimationFrame(step);
+  };
+  const ans={'heat-low':[true,'맞아요! 난방기 근처에서 데워진 공기가 위로 올라가고, 위의 차가운 공기가 내려와 방 전체가 따뜻해져요.'],
+    'heat-high':[false,'높은 곳에 두면 데워진 공기가 천장 근처에만 머물러서 바닥 쪽은 계속 추워요.'],
+    'cool-low':[false,'낮은 곳에 두면 차가운 공기가 바닥에만 깔리고 위쪽은 계속 더워요.'],
+    'cool-high':[true,'맞아요! 에어컨에서 나온 차가운 공기는 무거워서 아래로 내려오고, 따뜻한 공기는 위로 올라가 방 전체가 시원해져요.']};
+  el.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const [ok,t]=ans[b.dataset.q];$('#cfb').innerHTML=`<div class="feedback ${ok?'good':'oops'}">${t}</div>`});
+},
+
+/* 태양계 행성 탐험 */
+solar(el){
+  const P=[
+    {n:'수성',d:.4,au:.4,c:'#A8A29A',f:'태양과 가장 가깝고 가장 작은 행성이에요. 낮과 밤의 온도 차이가 매우 커요.'},
+    {n:'금성',d:.9,au:.7,c:'#E8C27A',f:'지구와 크기가 비슷하고, 새벽이나 저녁 하늘에서 가장 밝게 보이는 행성이에요.'},
+    {n:'지구',d:1,au:1,c:'#4A90D9',f:'물과 공기가 있어 생물이 사는 우리 행성이에요. 위성인 달이 하나 있어요.'},
+    {n:'화성',d:.5,au:1.5,c:'#D2643C',f:'흙에 철 성분이 많아 붉게 보여요. 탐사 로봇이 여러 대 내려가 있어요.'},
+    {n:'목성',d:11.2,au:5.2,c:'#D9A877',f:'태양계에서 가장 큰 행성이에요. 거대한 폭풍인 붉은 점이 있어요.'},
+    {n:'토성',d:9.4,au:9.6,c:'#E6CF8F',f:'얼음과 암석으로 된 커다란 고리가 뚜렷해요. 두 번째로 큰 행성이에요.'},
+    {n:'천왕성',d:4,au:19.1,c:'#9FDCE0',f:'옆으로 누운 채 태양 주위를 돌아요. 청록색으로 보여요.'},
+    {n:'해왕성',d:3.9,au:30,c:'#4F6FD9',f:'태양에서 가장 먼 행성이에요. 푸른색이고 바람이 아주 세요.'}];
+  let sel=2;
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">태양계 탐험</span></h3>
+   <p>행성을 눌러 크기와 거리를 비교해 보세요. 아래 행성들은 실제 크기 비율대로 그렸어요.</p>
+   <div class="planets" id="pl"></div>
+   <div id="info" class="feedback good"></div>
+   <p class="note" style="margin-top:12px">태양에서의 거리 (태양~지구 거리 = 1)</p>
+   <div class="dist" id="dist"></div>`;
+  const $=s=>el.querySelector(s),S=8;
+  function draw(){
+    $('#pl').innerHTML=P.map((p,i)=>{const w=Math.max(4,p.d*S);return `<button class="planet" data-i="${i}" aria-pressed="${i===sel}"><i style="width:${w}px;height:${w}px;background:${p.c}${p.n==='토성'?';box-shadow:0 0 0 3px #101830,0 0 0 6px #C9B37A':''}"></i><span>${p.n}</span></button>`}).join('');
+    el.querySelectorAll('.planet').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;draw()});
+    const p=P[sel];
+    $('#info').innerHTML=`<b class="disp" style="font-size:1.2rem">${p.n}</b><br>지름: 지구의 <b>${p.d}배</b> · 태양에서의 거리: 지구의 <b>${p.au}배</b><br>${p.f}`;
+    $('#dist').innerHTML=`<span class="lab0" style="left:0;transform:none">태양</span>`+P.map((q,i)=>`<i style="left:${q.au/30*96+2}%;background:${q.c};${i===sel?'width:16px;height:16px;bottom:-9px;outline:2px solid var(--ink)':''}"></i>`).join('')+`<span class="lab0" style="left:${p.au/30*96+2}%">${p.n}</span>`;
+  }
+  draw();
+},
+
+/* 용해와 용액: 녹이기 실험 */
+dissolve(el){
+  const MAX={설탕:{10:95,20:100,60:143},소금:{10:17.9,20:17.9,60:18.6},'베이킹 소다':{10:4,20:4.8,60:8.2},백반:{10:3.8,20:5.7,60:28}};
+  let sol='설탕',temp=20,added=0;
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">녹이기 실험</span></h3>
+   <p>물 50 mL(50 g)에 용질을 조금씩 넣어 보세요. 다 녹지 않으면 바닥에 쌓여요. 온도를 바꾸면 어떻게 될까요?</p>
+   <div class="lab"><div>
+     <div class="row"><span class="note">용질</span>${Object.keys(MAX).map(k=>`<button class="bottle" data-s="${k}">${k}</button>`).join('')}</div>
+     <div class="row" style="margin-top:8px"><span class="note">물 온도</span>${[10,20,60].map(t=>`<button class="bottle" data-t="${t}">${t} ℃</button>`).join('')}</div>
+     <div class="row" style="margin-top:12px"><button class="btn solid" data-a="2">+2 g 넣기</button><button class="btn solid" data-a="10">+10 g 넣기</button><button class="btn" id="empty">새 물로 바꾸기</button></div>
+     <div class="tblbox"><table class="tbl"><tbody>
+       <tr><th>넣은 양</th><td id="vAdd"></td></tr><tr><th>녹은 양</th><td id="vSol"></td></tr>
+       <tr><th>바닥에 남은 양</th><td id="vLeft"></td></tr><tr><th>전체 무게</th><td id="vTot"></td></tr></tbody></table></div>
+     <div id="dfb"></div></div>
+   <div class="beaker"><svg viewBox="0 0 140 160" role="img" aria-label="비커"><rect id="dl" x="34" y="50" width="72" height="96" rx="12"/><g id="crys"></g><circle id="tom" cx="70" cy="132" r="10" fill="#E5402F"/><path d="M66 121q4-5 8 0" stroke="#2E9E6B" stroke-width="3" fill="none"/><path d="M30 10v120q0 20 20 20h40q20 0 20-20V10" fill="none" stroke="var(--soft)" stroke-width="4"/><path d="M24 10h92" stroke="var(--soft)" stroke-width="4"/></svg>
+     <div class="lbl" id="dlbl"></div></div></div>
+   <p class="note" style="margin-top:8px">숫자는 실제 실험값에 가까운 대략적인 값이에요. 방울토마토는 설탕물이 진할수록 높이 떠요.</p>`;
+  const $=s=>el.querySelector(s);
+  el.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sol=b.dataset.s;added=0;draw()});
+  el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{temp=+b.dataset.t;draw(true)});
+  el.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{added=+(added+ +b.dataset.a).toFixed(1);draw()});
+  $('#empty').onclick=()=>{added=0;draw()};
+  let prevLeft=0;
+  function draw(tempChanged){
+    el.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===sol));
+    el.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.t===temp));
+    const max=MAX[sol][temp],solv=Math.min(added,max),left=+(added-solv).toFixed(1);
+    $('#vAdd').textContent=added+' g';$('#vSol').textContent=+solv.toFixed(1)+' g';$('#vLeft').textContent=left+' g';
+    $('#vTot').textContent=`물 50 g + ${sol} ${added} g = ${+(50+added).toFixed(1)} g`;
+    const conc=solv/50;
+    const tint=sol==='설탕'?`rgba(255,200,61,${Math.min(.55,.12+conc*.35)})`:`rgba(160,200,230,${Math.min(.6,.25+conc)})`;
+    $('#dl').setAttribute('fill',tint);
+    const n=Math.min(40,Math.ceil(left));let dots='';
+    for(let i=0;i<n;i++)dots+=`<rect x="${38+(i*13)%62}" y="${140-Math.floor(i/5)*3}" width="5" height="4" fill="#fff" stroke="#9AA6B8" stroke-width=".6"/>`;
+    $('#crys').innerHTML=dots;
+    const sugarFloat=sol==='설탕'?Math.max(0,Math.min(1,(conc-.3)/1.2)):0;
+    $('#tom').setAttribute('cy',132-sugarFloat*72);
+    $('#dlbl').textContent=`${temp} ℃ 물 50 mL`;
+    let msg='';
+    if(added===0)msg=`<b>${sol}</b>을(를) 넣어 보세요. ${temp} ℃ 물 50 mL에는 약 ${max} g까지 녹아요.`;
+    else if(left>0&&tempChanged&&left<prevLeft)msg=`<b>온도를 높였더니 더 녹았어요!</b> 물이 따뜻할수록 용질이 많이 녹아요.`;
+    else if(left>0)msg=`<b>더 이상 녹지 않아요.</b> ${temp} ℃ 물 50 mL에 ${sol}은(는) 약 ${max} g까지만 녹아요. ${sol==='소금'?'소금은 온도를 높여도 거의 더 녹지 않아요.':'물 온도를 높여 보세요.'}`;
+    else msg=`<b>모두 녹았어요.</b> 그런데 전체 무게는 ${+(50+added).toFixed(1)} g, 녹아도 무게는 그대로예요.`;
+    $('#dfb').innerHTML=`<div class="feedback ${left>0&&!(tempChanged&&left<prevLeft)?'oops':'good'}">${msg}</div>`;
+    prevLeft=left;
+  }
+  draw();
+},
+
 eco(el){
   const order=['벼','메뚜기','개구리','뱀','매'];
   const shuffled=['개구리','매','벼','뱀','메뚜기'];
@@ -310,7 +673,7 @@ eco(el){
    <div class="row"><button class="btn" id="reset">처음부터</button></div>
    <div id="fb"></div>
    <div id="balance" hidden>
-     <h3 class="disp" style="font-size:1.15rem;margin-top:16px">뱀이 갑자기 사라진다면?</h3>
+     <h3 class="disp sub3">뱀이 갑자기 사라진다면?</h3>
      <p class="note">버튼을 눌러 시간이 지나면서 생물 수가 어떻게 바뀌는지 보세요.</p>
      <div class="bars" id="bars"></div>
      <div class="row" style="margin-top:10px"><button class="btn solid" id="step">다음 단계 보기</button><button class="btn" id="back">처음 상태</button></div>
@@ -357,20 +720,18 @@ weather(el){
      <circle id="orb" cx="300" cy="50" r="24"/>
      <rect id="landR" x="0" y="210" width="300" height="90"/>
      <rect id="seaR" x="300" y="215" width="300" height="85"/>
-     <text id="landT" x="150" y="262" text-anchor="middle" font-size="22" font-family="Jua, sans-serif"></text>
-     <text id="seaT" x="450" y="262" text-anchor="middle" font-size="22" font-family="Jua, sans-serif"></text>
-     <text id="landP" x="150" y="290" text-anchor="middle" font-size="19"></text>
-     <text id="seaP" x="450" y="290" text-anchor="middle" font-size="19"></text>
+     <text id="landT" x="150" y="258" text-anchor="middle" font-size="22" font-family="Jua, sans-serif"></text>
+     <text id="seaT" x="450" y="258" text-anchor="middle" font-size="22" font-family="Jua, sans-serif"></text>
+     <text id="landP" x="150" y="288" text-anchor="middle" font-size="19"></text>
+     <text id="seaP" x="450" y="288" text-anchor="middle" font-size="19"></text>
      <path id="loop" class="flow" fill="none" stroke-width="5" stroke-linecap="round"/>
      <path id="head" stroke-width="0"/>
-     <text id="windT" x="300" y="190" text-anchor="middle" font-size="24" font-family="Jua, sans-serif"></text>
+     <text id="windT" x="300" y="98" text-anchor="middle" font-size="24" font-family="Jua, sans-serif"></text>
    </svg>
    <div class="feedback good" id="wtxt"></div>`;
   const $=s=>el.querySelector(s);
-  const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   function draw(){
     $('#d').classList.toggle('solid',day);$('#n').classList.toggle('solid',!day);
-    const ink=css('--ink');
     $('#skyR').setAttribute('fill',day?'#CFE6FA':'#1D2C4A');
     $('#orb').setAttribute('fill',day?'#FFC83D':'#F1F1E6');
     $('#orb').setAttribute('cx',day?100:500);
@@ -382,13 +743,11 @@ weather(el){
     $('#seaT').textContent=day?'바다: 천천히 데워짐':'바다: 천천히 식음';
     $('#landP').textContent=day?'따뜻·가벼움 → 저기압':'차갑·무거움 → 고기압';
     $('#seaP').textContent=day?'차갑·무거움 → 고기압':'따뜻·가벼움 → 저기압';
-    // 바람 순환: 낮은 바다→육지(아래), 밤은 육지→바다(아래)
     const path=day?'M520 195 L80 195 L80 110 L520 110 L520 180':'M80 195 L520 195 L520 110 L80 110 L80 180';
     const arrowColor=day?'#1E2A44':'#FFD261';
     $('#loop').setAttribute('d',path);$('#loop').setAttribute('stroke',arrowColor);
     $('#head').setAttribute('d',day?'M60 195 l22 -12 v24 z':'M540 195 l-22 -12 v24 z');$('#head').setAttribute('fill',arrowColor);
     $('#windT').textContent=day?'해풍: 바다 → 육지':'육풍: 육지 → 바다';
-    $('#windT').setAttribute('y',day?100:100);
     $('#wtxt').innerHTML=day
       ?'<b>낮</b> 햇빛을 받으면 육지가 바다보다 빨리 뜨거워져요. 육지 위 공기가 데워져 위로 올라가 <b>저기압</b>이 되고, 상대적으로 차가운 바다 위는 <b>고기압</b>이에요. 그래서 바다에서 육지로 <b>해풍</b>이 불어요.'
       :'<b>밤</b> 육지는 바다보다 빨리 식어요. 이제 육지 위가 차갑고 무거운 <b>고기압</b>, 바다 위가 <b>저기압</b>이 돼요. 그래서 육지에서 바다로 <b>육풍</b>이 불어요.';
@@ -402,13 +761,13 @@ motion(el){
   const maxD=120;let guess=null,raf=0;
   el.innerHTML=`<h3>놀이 실험실 <span class="tag">달리기 속력 대결</span></h3>
    <p>세 친구의 기록이에요. 누가 가장 빠를지 먼저 골라 보고, 달리기를 시작해 봐요.</p>
-   <table class="tbl"><thead><tr><th>친구</th><th>이동 거리</th><th>걸린 시간</th><th>속력</th></tr></thead>
-   <tbody>${R.map((r,i)=>`<tr><td>${r.name}</td><td>${r.d} m</td><td>${r.t} 초</td><td id="sp${i}">?</td></tr>`).join('')}</tbody></table>
+   <div class="tblbox"><table class="tbl"><thead><tr><th>친구</th><th>이동 거리</th><th>걸린 시간</th><th>속력</th></tr></thead>
+   <tbody>${R.map((r,i)=>`<tr><td>${r.name}</td><td>${r.d} m</td><td>${r.t} 초</td><td id="sp${i}">?</td></tr>`).join('')}</tbody></table></div>
    <div class="row" style="margin-top:12px"><span class="note">내 예상:</span>${R.map((r,i)=>`<button class="btn" data-g="${i}">${r.name}</button>`).join('')}</div>
    <div class="track-wrap" id="track">${R.map((r,i)=>`<div class="lane"><span class="who">${r.name}</span><span class="flag" style="left:${r.d/maxD*100}%"></span><span class="runner" id="r${i}" style="background:${r.c}">${r.name[0]}</span></div>`).join('')}</div>
    <div class="row" style="margin-top:10px;justify-content:space-between"><button class="btn solid" id="go" disabled>달리기 시작</button><span class="timer" id="clock">0.0 초</span></div>
    <div id="mfb"></div>
-   <h3 class="disp" style="font-size:1.15rem;margin-top:18px">속력 계산기</h3>
+   <h3 class="disp sub3">속력 계산기</h3>
    <div class="calc"><label for="cd">이동 거리 (m)<input id="cd" type="number" min="0" value="100"></label>
    <label for="ct">걸린 시간 (초)<input id="ct" type="number" min="0" step="0.1" value="20"></label>
    <div><div class="big" id="cr"></div><div class="note" id="cc"></div></div></div>`;
@@ -444,12 +803,12 @@ motion(el){
 acid(el){
   const S=[
     {n:'식초',k:'산',c:'#E0457B'},{n:'레몬즙',k:'산',c:'#E5386F'},{n:'사이다',k:'산',c:'#C95C9C'},{n:'탄산수',k:'산',c:'#C2649E'},{n:'묽은 염산',k:'산',c:'#D9263F'},
-    {n:'비눗물',k:'염기',c:'#3E9AA8'},{n:'석회수',k:'염기',c:'#55A85E'},{n:'유리 세정제',k:'염기',c:'#3A86C2'},{n:'베이킹소다 물',k:'염기',c:'#4E7FCB'},{n:'묽은 수산화 나트륨 용액',k:'염기',c:'#C9B52C'}];
+    {n:'비눗물',k:'염기',c:'#3E9AA8'},{n:'석회수',k:'염기',c:'#55A85E'},{n:'유리 세정제',k:'염기',c:'#3A86C2'},{n:'베이킹 소다 물',k:'염기',c:'#4E7FCB'},{n:'묽은 수산화 나트륨 용액',k:'염기',c:'#C9B52C'}];
   let sel=null;const sorted={};
   el.innerHTML=`<h3>놀이 실험실 <span class="tag">양배추 지시약 탐정</span></h3>
    <p>용액을 하나 고르면 보라색 양배추 지시약을 떨어뜨려요. 색을 보고 산성인지 염기성인지 분류해 봐요.</p>
-   <div class="lab"><div style="min-width:0"><div class="bottles" id="bt"></div>
-     <div class="bins"><div class="bin"><h4>산성</h4><div id="b산"></div></div><div class="bin"><h4>염기성</h4><div id="b염기"></div></div></div>
+   <div class="lab"><div><div class="bottles" id="bt"></div>
+     <div class="bins" style="grid-template-columns:1fr 1fr"><div class="bin"><h4>산성</h4><div id="b산"></div></div><div class="bin"><h4>염기성</h4><div id="b염기"></div></div></div>
      <div class="row" style="margin-top:10px"><button class="btn" id="toA" disabled>산성으로 분류</button><button class="btn" id="toB" disabled>염기성으로 분류</button></div>
      <div id="afb"></div></div>
    <div class="beaker"><svg viewBox="0 0 140 160" role="img" aria-label="비커"><path d="M30 10v120q0 20 20 20h40q20 0 20-20V10" fill="none" stroke="var(--soft)" stroke-width="4"/><rect id="liq" x="34" y="60" width="72" height="86" rx="12" fill="#8E5BB5"/><path d="M24 10h92" stroke="var(--soft)" stroke-width="4"/></svg>
@@ -462,7 +821,7 @@ acid(el){
     $('#bt').innerHTML=S.map((s,i)=>`<button class="bottle ${sorted[i]?'done':''}" aria-pressed="${sel===i}" data-i="${i}" ${sorted[i]?'disabled':''}>${s.n}</button>`).join('');
     el.querySelectorAll('.bottle:not([disabled])').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;
       const liq=$('#liq');liq.setAttribute('fill','#8E5BB5');$('#bl').textContent=S[sel].n+'에 지시약을 넣는 중…';
-      setTimeout(()=>{liq.setAttribute('fill',S[sel].c);$('#bl').textContent=S[sel].n},450);
+      const s=sel;setTimeout(()=>{if(sel===s){liq.setAttribute('fill',S[s].c);$('#bl').textContent=S[s].n}},450);
       $('#toA').disabled=$('#toB').disabled=false;$('#afb').innerHTML='';draw()});
     ['산','염기'].forEach(k=>$('#b'+k).innerHTML=S.map((s,i)=>sorted[i]&&s.k===k?`<span class="chip" style="background:${s.c}">${s.n}</span>`:'').join(''));
   }

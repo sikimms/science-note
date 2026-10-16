@@ -1,5 +1,5 @@
-// 오프라인 저장 (버전 3b9980bd9b)
-const CACHE='sci5-3b9980bd9b',FILES=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/maskable-512.png"];
+// 오프라인 저장 (버전 b6d8bfd328)
+const CACHE='sci5-b6d8bfd328',FILES=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/maskable-512.png"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))));});
 self.addEventListener('message',e=>{if(e.data==='SKIP')self.skipWaiting();});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('sci5-')&&k!==CACHE&&k!=='sci5-font').map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
