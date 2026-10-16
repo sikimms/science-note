@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>과학 탐험 노트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
+<style>
+/* Layout: 모눈 실험 노트 위에 단원 탭 → 이야기·핵심·실험실·퀴즈·집에서 해보기 순서의 한 줄 흐름 */
+:root{
+  --paper:#F6F9FC; --card:#FFFFFF; --ink:#1E2A44; --soft:#5B6782; --line:#D9E3EF; --grid:rgba(59,125,219,.07);
+  --sun:#FFC83D; --sun-ink:#5A3D00;
+  --leaf:#2E9E6B; --sky:#3B7DDB; --rush:#E46B2E; --berry:#B4458F;
+  --ok:#2E9E6B; --bad:#D6455D; --ok-bg:#E5F6EE; --bad-bg:#FCE8EC;
+  --display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#132030; --card:#1B2B3F; --ink:#E9EFF7; --soft:#A5B3C8; --line:#2C405A; --grid:rgba(140,180,240,.06);
+  --sun:#FFD261; --sun-ink:#3A2800; --leaf:#4CC48D; --sky:#6FA4F2; --rush:#F28A55; --berry:#DA72B7;
+  --ok:#4CC48D; --bad:#F27286; --ok-bg:#163A2C; --bad-bg:#45202A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#132030; --card:#1B2B3F; --ink:#E9EFF7; --soft:#A5B3C8; --line:#2C405A; --grid:rgba(140,180,240,.06);
+  --sun:#FFD261; --sun-ink:#3A2800; --leaf:#4CC48D; --sky:#6FA4F2; --rush:#F28A55; --berry:#DA72B7;
+  --ok:#4CC48D; --bad:#F27286; --ok-bg:#163A2C; --bad-bg:#45202A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.7;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 60px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,.disp{font-family:var(--display);font-weight:400;text-wrap:balance;line-height:1.3;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand h1{font-size:2rem}
+.brand small{display:block;color:var(--soft);font-size:.9rem}
+.stars{display:flex;align-items:center;gap:8px;background:var(--sun);color:var(--sun-ink);border-radius:999px;padding:6px 16px;font-family:var(--display);font-size:1.15rem}
+.stars svg{width:22px;height:22px}
+.parent{margin-top:16px;border:1.5px dashed var(--line);border-radius:14px;padding:12px 16px;color:var(--soft);font-size:.95rem}
+.parent b{color:var(--ink)}
+
+/* tabs */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.tab{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tab .n{font-size:.8rem;color:var(--soft);letter-spacing:.04em}
+.tab .t{font-family:var(--display);font-size:1.1rem;line-height:1.25}
+.tab .b{font-size:.8rem;color:var(--soft)}
+.tab[aria-selected="true"]{border-color:var(--u);box-shadow:0 4px 0 var(--u)}
+.tab .badge{display:inline-block;margin-top:4px;font-size:.75rem;padding:1px 8px;border-radius:999px;background:var(--u);color:var(--card)}
+@media (max-width:640px){.tabs{grid-template-columns:repeat(2,1fr)}}
+
+/* unit */
+.unit{margin-top:22px;display:flex;flex-direction:column;gap:18px}
+.hero{background:var(--u);color:var(--card);border-radius:20px;padding:22px 22px}
+.hero .ey{font-size:.85rem;opacity:.9;letter-spacing:.04em}
+.hero h2{font-size:1.9rem;margin-top:2px}
+.talk{display:flex;gap:12px;align-items:flex-start;margin-top:14px;background:var(--card);color:var(--ink);border-radius:16px;padding:12px 14px}
+.talk svg{flex:0 0 46px;width:46px;height:46px}
+.talk p{min-width:0}
+.sec{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:18px 18px}
+.sec>h3{font-size:1.35rem;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sec>h3 .tag{font-family:var(--body);font-size:.75rem;background:color-mix(in srgb,var(--u) 16%,transparent);color:var(--ink);padding:2px 10px;border-radius:999px}
+.points{display:grid;gap:12px}
+.pt{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.pt .k{width:34px;height:34px;border-radius:50%;background:var(--u);color:var(--card);display:grid;place-items:center;font-family:var(--display);font-size:1.1rem}
+.pt b{font-family:var(--display);font-weight:400;font-size:1.12rem;display:block}
+.pt span{color:var(--soft)}
+.pt em{font-style:normal;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--sun) 55%,transparent) 0)}
+.words{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.word{border:1.5px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.9rem;background:var(--paper)}
+.word b{font-weight:400;font-family:var(--display)}
+
+/* buttons */
+.btn{border:2px solid var(--u);background:var(--card);border-radius:12px;padding:8px 16px;font-family:var(--display);font-size:1.02rem}
+.btn.solid{background:var(--u);color:var(--card)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.note{font-size:.95rem;color:var(--soft)}
+.feedback{margin-top:10px;padding:10px 14px;border-radius:12px;font-size:.98rem}
+.feedback.good{background:var(--ok-bg)}
+.feedback.oops{background:var(--bad-bg)}
+
+/* food chain */
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:52px;margin:12px 0;padding:8px;border:2px dashed var(--line);border-radius:14px}
+.chain .slot{font-family:var(--display);padding:6px 12px;border-radius:10px;background:color-mix(in srgb,var(--u) 15%,var(--card))}
+.chain .arr{color:var(--soft);font-size:.8rem}
+.bars{display:grid;gap:8px;margin-top:10px}
+.bar{display:grid;grid-template-columns:62px 1fr 48px;gap:10px;align-items:center;font-size:.95rem}
+.bar .track{height:18px;background:var(--paper);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.bar .fill{height:100%;background:var(--u);border-radius:9px;transition:width .8s ease}
+.bar .chg{font-family:var(--display);text-align:right}
+.up{color:var(--ok)} .down{color:var(--bad)}
+
+/* weather */
+.scene{width:100%;max-width:100%;border-radius:14px;border:1.5px solid var(--line);display:block;margin-top:12px}
+.flow{stroke-dasharray:10 10;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-20}}
+@media (prefers-reduced-motion:reduce){.flow{animation:none}}
+
+/* race */
+.lane{position:relative;height:46px;border-bottom:2px dashed var(--line)}
+.lane .who{position:absolute;left:0;top:4px;font-size:.8rem;color:var(--soft)}
+.runner{position:absolute;bottom:4px;left:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--card);font-family:var(--display);font-size:.85rem;transform:translateX(0)}
+.flag{position:absolute;bottom:0;width:2px;height:30px;background:var(--soft)}
+.track-wrap{position:relative;margin-top:12px;padding-right:30px}
+.timer{font-family:var(--display);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:.95rem;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+.tbl th{font-weight:400;color:var(--soft)}
+.calc{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:12px}
+.calc label{display:flex;flex-direction:column;font-size:.85rem;color:var(--soft)}
+.calc input{width:110px;font:inherit;font-size:1.05rem;padding:6px 10px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+.big{font-family:var(--display);font-size:1.5rem}
+
+/* acid base lab */
+.lab{display:grid;grid-template-columns:1fr 180px;gap:16px;align-items:start;margin-top:10px}
+@media (max-width:560px){.lab{grid-template-columns:1fr}}
+.bottles{display:flex;flex-wrap:wrap;gap:8px}
+.bottle{border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:6px 12px;font-size:.95rem}
+.bottle.done{opacity:.4}
+.bottle[aria-pressed="true"]{border-color:var(--u)}
+.beaker{display:flex;flex-direction:column;align-items:center;gap:6px}
+.beaker svg{width:140px;height:160px}
+.beaker .lbl{font-family:var(--display);text-align:center}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bin{border:2px dashed var(--line);border-radius:14px;padding:10px;min-height:70px}
+.bin h4{margin:0 0 6px;font-family:var(--display);font-weight:400;font-size:1.05rem}
+.chip{display:inline-block;margin:2px;padding:2px 10px;border-radius:999px;font-size:.85rem;color:#fff}
+.scale{display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:6px}
+.scale i{flex:1}
+.scale-l{display:flex;justify-content:space-between;font-size:.78rem;color:var(--soft)}
+
+/* quiz */
+.q{padding:14px 0;border-top:1px dashed var(--line)}
+.q:first-of-type{border-top:0;padding-top:0}
+.q .qt{font-family:var(--display);font-size:1.12rem}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.opt{border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:6px 14px;text-align:left}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.home ol{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.warn{margin-top:10px;font-size:.92rem;padding:8px 12px;border-radius:10px;background:var(--bad-bg)}
+.foot{margin-top:28px;font-size:.85rem;color:var(--soft);text-align:center}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true"><circle cx="32" cy="34" r="26" fill="var(--sun)"/><circle cx="23" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><circle cx="41" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><path d="M31 30h2" stroke="var(--ink)" stroke-width="3"/><circle cx="24" cy="31" r="3" fill="var(--ink)"/><circle cx="42" cy="31" r="3" fill="var(--ink)"/><path d="M25 45q7 6 14 0" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><path d="M32 8v-4M24 10l-3-3M40 10l3-3" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/></svg>
+      <div><h1>과학 탐험 노트</h1><small>초등 5학년 2학기 · 궁금 박사와 함께</small></div>
+    </div>
+    <div class="stars" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg><span id="starCount">0</span> / <span id="starTotal">0</span></div>
+  </header>
+
+  <div class="parent"><b>보호자께</b> 하루에 한 단원 조각씩, 15분이면 충분해요. 이야기 → 핵심 3가지 → 놀이 실험실 → 퀴즈 순서로 하고, 주말에 "집에서 해보기"를 함께 해 보세요. 틀려도 해설을 읽고 다시 풀 수 있어요. 별은 이 기기에만 저장돼요.</div>
+
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <main id="unit"></main>
+  <p class="foot">교과서 출판사마다 단원 이름과 순서가 조금 다를 수 있어요. 학교 진도에 맞는 단원부터 골라 보세요.</p>
+</div>
+
+<script>
+const OWL='<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="26" fill="var(--sun)"/><circle cx="23" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><circle cx="41" cy="30" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><circle cx="24" cy="31" r="3" fill="var(--ink)"/><circle cx="42" cy="31" r="3" fill="var(--ink)"/><path d="M25 45q7 6 14 0" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/></svg>';
+
+const UNITS=[
+{id:'eco',n:'1단원',name:'생물과 환경',color:'var(--leaf)',badge:'생태 탐험가',
+ hook:'우리 동네 논에서 뱀이 갑자기 다 사라진다면 어떤 일이 생길까? 뱀이 무섭다고 좋아할 일만은 아니래. 오늘은 생물들이 서로 어떻게 연결되어 있는지 알아보자!',
+ points:[
+  {t:'생태계 = 생물 + 생물이 아닌 것',d:'풀, 개구리, 곰팡이 같은 <em>생물 요소</em>와 햇빛, 물, 공기, 흙, 온도 같은 <em>비생물 요소</em>가 서로 영향을 주고받으며 함께 사는 곳이 생태계예요. 연못 하나, 숲 하나도 생태계예요.'},
+  {t:'먹고 먹히는 사이',d:'스스로 양분을 만드는 식물은 <em>생산자</em>, 다른 생물을 먹는 동물은 <em>소비자</em>, 죽은 생물을 썩게 해서 흙으로 돌려보내는 곰팡이·세균은 <em>분해자</em>예요. 먹고 먹히는 관계가 한 줄로 이어지면 <em>먹이사슬</em>, 여러 줄이 그물처럼 얽히면 <em>먹이그물</em>이에요.'},
+  {t:'균형과 적응',d:'생물의 수가 알맞게 유지되는 상태를 <em>생태계 평형</em>이라고 해요. 그리고 생물은 사는 곳에 맞게 모습과 생활 방식이 바뀌어 왔어요. 사막의 선인장은 잎이 가시로 변해 물을 아끼고, 북극여우는 털이 두껍고 귀가 작아 열을 덜 빼앗겨요. 이것을 <em>적응</em>이라고 해요.'}],
+ words:[['생산자','양분을 스스로 만듦'],['소비자','다른 생물을 먹음'],['분해자','죽은 것을 분해'],['먹이그물','먹이사슬이 얽힘'],['적응','환경에 맞게 변함']],
+ sim:'eco',
+ quiz:[
+  {q:'햇빛, 물, 공기, 흙처럼 살아 있지 않은 것을 무엇이라고 할까요?',o:['생물 요소','비생물 요소','분해자'],a:1,w:'살아 있지 않은 것은 비생물 요소예요. 그래도 생물이 사는 데 꼭 필요하답니다.'},
+  {q:'곰팡이와 세균은 생태계에서 어떤 역할을 할까요?',o:['생산자','소비자','분해자'],a:2,w:'죽은 생물과 배출물을 분해해서 흙을 기름지게 하는 분해자예요. 분해자가 없으면 세상이 쓰레기로 가득 찰 거예요.'},
+  {q:'먹이사슬 여러 개가 그물처럼 얽혀 있는 것은?',o:['먹이그물','먹이피라미드','생태계 평형'],a:0,w:'한 동물이 여러 가지를 먹고, 여러 동물에게 먹히기도 해서 그물 모양이 돼요.'},
+  {q:'선인장 잎이 가시 모양으로 변한 까닭은?',o:['동물을 사냥하려고','물이 몸 밖으로 덜 빠져나가게 하려고','햇빛을 더 많이 받으려고'],a:1,w:'잎이 넓으면 물이 많이 증발해요. 물이 귀한 사막에서 살아남기 위한 적응이에요.'}],
+ home:{title:'동네 생태계 빙고',steps:['종이에 3×3 칸을 그려요.','산책하면서 생산자, 소비자, 분해자(버섯, 이끼 아래 썩은 잎), 비생물 요소를 찾아 칸에 적어요.','찾은 것들로 먹이사슬을 하나 만들어 화살표로 이어 보세요.'],warn:''}},
+
+{id:'weather',n:'2단원',name:'날씨와 우리 생활',color:'var(--sky)',badge:'날씨 박사',
+ hook:'여름 바닷가에서 낮에는 바다 쪽에서 시원한 바람이 불어오는데, 밤에는 반대로 육지에서 바다로 바람이 분대. 바람이 왜 방향을 바꿀까?',
+ points:[
+  {t:'습도와 이슬·안개·구름',d:'공기 속에 수증기가 들어 있는 정도가 <em>습도</em>예요. 수증기가 차가워지면 작은 물방울로 바뀌어요. 차가운 풀잎에 맺히면 <em>이슬</em>, 땅 가까운 공기에 떠 있으면 <em>안개</em>, 하늘 높이 올라가 생기면 <em>구름</em>이에요. 얼음물 컵 겉에 물방울이 생기는 것도 같은 원리예요.'},
+  {t:'바람은 무거운 쪽에서 가벼운 쪽으로',d:'차가운 공기는 무거워서 누르는 힘이 커요. 이런 곳이 <em>고기압</em>, 따뜻하고 가벼운 공기가 있는 곳이 <em>저기압</em>이에요. 바람은 언제나 <em>고기압에서 저기압으로</em> 불어요.'},
+  {t:'바닷가 바람과 계절 날씨',d:'낮에는 육지가 바다보다 빨리 데워져 바다에서 육지로 <em>해풍</em>이, 밤에는 육지가 빨리 식어 육지에서 바다로 <em>육풍</em>이 불어요. 우리나라 겨울에는 북서쪽의 <em>차갑고 건조한</em> 공기가, 여름에는 남동쪽의 <em>덥고 습한</em> 공기가 와서 날씨가 달라져요.'}],
+ words:[['습도','공기 속 수증기 정도'],['고기압','무겁게 누르는 공기'],['저기압','가볍게 누르는 공기'],['해풍','낮, 바다→육지'],['육풍','밤, 육지→바다']],
+ sim:'weather',
+ quiz:[
+  {q:'공기 중에 수증기가 포함된 정도를 무엇이라고 할까요?',o:['기온','습도','기압'],a:1,w:'습도는 건습구 습도계로 잴 수 있어요. 습도가 높으면 빨래가 잘 안 말라요.'},
+  {q:'맑은 날 새벽, 차가운 풀잎에 맺힌 물방울은?',o:['이슬','안개','구름'],a:0,w:'밤새 차가워진 풀잎에 수증기가 닿아 물방울이 된 것이 이슬이에요.'},
+  {q:'바람은 어디에서 어디로 불까요?',o:['저기압 → 고기압','고기압 → 저기압','항상 북쪽 → 남쪽'],a:1,w:'무겁게 누르는 고기압에서 가벼운 저기압 쪽으로 공기가 밀려가요.'},
+  {q:'맑은 날 낮, 바닷가에서 부는 바람은?',o:['바다에서 육지로 부는 해풍','육지에서 바다로 부는 육풍'],a:0,w:'낮에는 육지가 빨리 데워져 육지 위가 저기압이 돼요. 그래서 바다에서 육지로 바람이 불어요.'},
+  {q:'우리나라 겨울, 북서쪽에서 오는 공기의 성질은?',o:['덥고 습하다','차갑고 건조하다','따뜻하고 건조하다'],a:1,w:'대륙에서 오는 차갑고 건조한 공기 때문에 겨울은 춥고 건조해요.'}],
+ home:{title:'컵으로 이슬 만들기',steps:['유리컵에 얼음물을 가득 담아요.','컵 바깥을 마른 휴지로 닦고 5분 기다려요.','컵 겉면에 생긴 물방울을 관찰해요. 이 물은 컵 안에서 새어 나온 걸까, 공기 속에서 온 걸까? 컵 안 물에 물감을 타서 확인해 봐요.'],warn:''}},
+
+{id:'motion',n:'3단원',name:'물체의 운동',color:'var(--rush)',badge:'스피드 측정관',
+ hook:'달리기 시합에서 50 m를 10초에 뛴 친구와 90 m를 15초에 뛴 친구가 있어. 거리도 시간도 다른데, 누가 더 빠른 걸까? 오늘은 "빠르기"를 숫자로 재는 법을 배워 보자!',
+ points:[
+  {t:'운동이란 위치가 바뀌는 것',d:'시간이 지나면서 물체의 위치가 바뀌면 <em>운동한다</em>고 해요. 운동은 <em>걸린 시간</em>과 <em>이동 거리</em>로 나타내요. "자전거가 10초 동안 50 m를 이동했다"처럼요.'},
+  {t:'빠르기를 비교하는 세 가지 방법',d:'같은 거리를 갔다면 <em>시간이 짧을수록</em> 빨라요. 같은 시간 동안 갔다면 <em>거리가 길수록</em> 빨라요. 거리도 시간도 다르다면 속력을 계산해서 비교해요.'},
+  {t:'속력 = 이동 거리 ÷ 걸린 시간',d:'1초(또는 1시간) 동안 이동한 거리가 <em>속력</em>이에요. 단위는 m/s(미터 매 초), km/h(킬로미터 매 시)를 써요. 속력이 빠를수록 멈추기 어려워서 <em>안전띠, 에어백, 어린이 보호 구역(시속 30 km)</em> 같은 안전장치가 필요해요.'}],
+ words:[['이동 거리','움직인 길이'],['걸린 시간','움직인 동안'],['속력','거리 ÷ 시간'],['m/s','1초에 몇 m'],['km/h','1시간에 몇 km']],
+ sim:'motion',
+ quiz:[
+  {q:'물체의 운동은 무엇으로 나타낼까요?',o:['무게와 색깔','걸린 시간과 이동 거리','크기와 모양'],a:1,w:'"얼마 동안 얼마나 이동했는지"를 말하면 운동을 나타낼 수 있어요.'},
+  {q:'120 m를 20초 동안 달렸다면 속력은?',o:['6 m/s','100 m/s','2400 m/s'],a:0,w:'120 ÷ 20 = 6. 1초에 6 m씩 이동한 셈이에요.'},
+  {q:'모두 100 m를 달렸어요. 누가 가장 빠를까요?',o:['20초 걸린 친구','16초 걸린 친구','25초 걸린 친구'],a:1,w:'같은 거리라면 걸린 시간이 가장 짧은 친구가 가장 빨라요.'},
+  {q:'어린이 보호 구역에서 자동차의 제한 속력은 보통 얼마일까요?',o:['시속 30 km','시속 60 km','시속 100 km'],a:0,w:'속력이 느리면 갑자기 아이가 나타나도 멈출 수 있어서 시속 30 km로 정해져 있어요.'},
+  {q:'자동차가 급히 멈출 때 안전띠가 하는 일은?',o:['차를 더 빨리 달리게 한다','몸이 앞으로 튀어 나가지 않게 잡아 준다','에어컨을 켠다'],a:1,w:'차가 멈춰도 몸은 계속 앞으로 가려고 해요. 안전띠가 몸을 붙잡아 줘요.'}],
+ home:{title:'우리 가족 속력 재기',steps:['공원이나 운동장에서 줄자(또는 걸음 수)로 20 m를 재고 출발선과 도착선을 표시해요.','스마트폰 스톱워치로 걷기, 뛰기, 뒤로 걷기 시간을 재요.','이동 거리 ÷ 걸린 시간으로 각자의 속력을 계산하고 표로 정리해요.'],warn:'차가 다니지 않는 곳에서만 해요.'}},
+
+{id:'acid',n:'4단원',name:'산과 염기',color:'var(--berry)',badge:'용액 감별사',
+ hook:'보라색 양배추 물에 식초를 넣으면 분홍색, 비눗물을 넣으면 초록색이 된대. 마법 같지만 과학이야! 색깔로 용액의 성질을 알아내는 탐정이 되어 보자.',
+ points:[
+  {t:'지시약은 용액의 성질을 알려 주는 색깔 신호',d:'<em>리트머스 종이</em>: 산성은 푸른 종이를 붉게, 염기성은 붉은 종이를 푸르게 바꿔요. <em>페놀프탈레인 용액</em>은 염기성에서만 붉게 변해요. <em>붉은 양배추 지시약</em>은 산성에서 붉은 계열, 염기성에서 푸른색·초록색·노란색 계열로 변해요.'},
+  {t:'산과 염기는 서로 다른 것을 녹여요',d:'<em>산성</em> 용액(묽은 염산)은 대리암 조각과 달걀 껍데기를 녹이며 거품을 내요. <em>염기성</em> 용액(묽은 수산화 나트륨 용액)은 두부와 삶은 달걀 흰자를 녹여 흐물흐물하게 만들어요.'},
+  {t:'섞으면 서로 약해져요',d:'산성 용액에 염기성 용액을 계속 넣으면 산성이 <em>점점 약해지다가</em> 염기성으로 바뀌어요. 그래서 속이 쓰릴 때 염기성 제산제를 먹고, 생선 비린내(염기성)를 레몬즙(산성)으로 줄여요.'}],
+ words:[['지시약','색으로 성질 표시'],['산성','리트머스 푸른→붉은'],['염기성','리트머스 붉은→푸른'],['페놀프탈레인','염기에서 붉게']],
+ sim:'acid',
+ quiz:[
+  {q:'붉은색 리트머스 종이를 푸르게 바꾸는 용액은?',o:['산성 용액','염기성 용액'],a:1,w:'염기성은 "붉은 → 푸른", 산성은 "푸른 → 붉은"으로 기억해요.'},
+  {q:'페놀프탈레인 용액을 넣었더니 붉게 변했어요. 이 용액은?',o:['식초','석회수','레몬즙'],a:1,w:'페놀프탈레인은 염기성에서만 붉어져요. 석회수는 염기성이에요.'},
+  {q:'대리암 조각을 넣었더니 거품이 나며 녹았어요. 어떤 용액일까요?',o:['묽은 염산(산성)','묽은 수산화 나트륨 용액(염기성)'],a:0,w:'산성 용액은 대리암, 달걀 껍데기를 녹이며 기체 거품을 만들어요.'},
+  {q:'생선 요리에 레몬즙을 뿌리는 까닭은?',o:['산성인 레몬즙이 비린내를 줄여서','레몬즙이 생선을 익혀서','색깔을 예쁘게 하려고'],a:0,w:'비린내를 내는 물질은 염기성이라 산성인 레몬즙과 만나면 약해져요.'},
+  {q:'산성 용액에 염기성 용액을 조금씩 계속 넣으면?',o:['산성이 점점 강해진다','산성이 점점 약해진다','아무 변화가 없다'],a:1,w:'서로의 성질을 약하게 만들어서, 계속 넣으면 결국 염기성으로 바뀌어요.'}],
+ home:{title:'붉은 양배추 지시약 만들기',steps:['붉은 양배추 잎 2~3장을 잘게 찢어 그릇에 넣어요.','어른이 따뜻한 물을 부어 주면 10분 기다렸다가 체로 걸러 보라색 물만 모아요.','투명한 컵 여러 개에 지시약을 조금씩 담고 식초, 레몬즙, 사이다, 베이킹소다 물, 비눗물을 각각 넣어 색을 비교해요.'],warn:'뜨거운 물은 꼭 어른이 다뤄요. 락스·변기 세제 같은 강한 세제는 쓰지 말고, 여러 세제를 서로 섞지 마세요. 다 쓴 용액은 마시지 말고 버려요.'}}
+];
+
+/* ---------- 별 저장 ---------- */
+let answers={};
+try{answers=JSON.parse(localStorage.getItem('sci5-answers')||'{}')||{}}catch(e){answers={}}
+function save(){try{localStorage.setItem('sci5-answers',JSON.stringify(answers))}catch(e){}}
+const total=UNITS.reduce((s,u)=>s+u.quiz.length,0);
+function unitStars(u){return u.quiz.filter((_,i)=>answers[u.id+i]===true).length}
+function refreshStars(){
+  document.getElementById('starCount').textContent=UNITS.reduce((s,u)=>s+unitStars(u),0);
+  document.getElementById('starTotal').textContent=total;
+  renderTabs();
+}
+
+/* ---------- 탭 ---------- */
+let current=UNITS[0].id;
+const fromHash=(location.hash||'').slice(1);
+if(UNITS.some(u=>u.id===fromHash))current=fromHash;
+else{try{const s=localStorage.getItem('sci5-tab');if(UNITS.some(u=>u.id===s))current=s}catch(e){}}
+
+function renderTabs(){
+  const el=document.getElementById('tabs');
+  el.innerHTML=UNITS.map(u=>{
+    const s=unitStars(u),full=s===u.quiz.length;
+    return `<button class="tab" role="tab" id="tab-${u.id}" style="--u:${u.color}" aria-selected="${u.id===current}" data-id="${u.id}">
+      <span class="n">${u.n}</span><span class="t">${u.name}</span><span class="b">별 ${s} / ${u.quiz.length}</span>
+      ${full?`<span class="badge">${u.badge}</span>`:''}</button>`}).join('');
+  el.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{current=b.dataset.id;try{localStorage.setItem('sci5-tab',current)}catch(e){}renderTabs();renderUnit()});
+}
+
+/* ---------- 단원 ---------- */
+function renderUnit(){
+  const u=UNITS.find(x=>x.id===current);
+  const m=document.getElementById('unit');
+  m.className='unit';m.style.setProperty('--u',u.color);
+  m.innerHTML=`
+  <section class="hero"><div class="ey">${u.n}</div><h2>${u.name}</h2>
+    <div class="talk">${OWL}<p><b class="disp">궁금 박사</b><br>${u.hook}</p></div></section>
+  <section class="sec"><h3>꼭 알아야 할 3가지 <span class="tag">핵심 개념</span></h3>
+    <div class="points">${u.points.map((p,i)=>`<div class="pt"><div class="k">${i+1}</div><div><b>${p.t}</b><span>${p.d}</span></div></div>`).join('')}</div>
+    <div class="words">${u.words.map(w=>`<span class="word"><b>${w[0]}</b> · ${w[1]}</span>`).join('')}</div></section>
+  <section class="sec" id="sim"></section>
+  <section class="sec"><h3>도전! 퀴즈 <span class="tag">맞히면 별</span></h3><div id="quiz"></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="retry">틀린 문제 다시 풀기</button><span class="note" id="qsum"></span></div></section>
+  <section class="sec home"><h3>집에서 해보기 <span class="tag">${u.home.title}</span></h3>
+    <ol>${u.home.steps.map(s=>`<li>${s}</li>`).join('')}</ol>${u.home.warn?`<div class="warn"><b>안전</b> ${u.home.warn}</div>`:''}</section>`;
+  SIMS[u.sim](document.getElementById('sim'));
+  renderQuiz(u);
+  document.getElementById('retry').onclick=()=>{u.quiz.forEach((_,i)=>{if(answers[u.id+i]===false)delete answers[u.id+i]});save();renderQuiz(u);refreshStars()};
+}
+
+function renderQuiz(u){
+  const box=document.getElementById('quiz');
+  box.innerHTML=u.quiz.map((q,i)=>{
+    const st=answers[u.id+i];
+    const done=st!==undefined;
+    return `<div class="q"><div class="qt">Q${i+1}. ${q.q}</div><div class="opts">${q.o.map((o,j)=>{
+      let c='';if(done){if(j===q.a&&st)c='right';}
+      return `<button class="opt ${c}" data-i="${i}" data-j="${j}" ${done?'disabled':''}>${o}</button>`}).join('')}</div>
+      ${done?`<div class="feedback ${st?'good':'oops'}"><b>${st?'정답!':'아쉬워요.'}</b> ${st?'':'정답은 "'+q.o[q.a]+'" 이에요. '}${q.w}</div>`:''}</div>`}).join('');
+  box.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,j=+b.dataset.j;answers[u.id+i]=(j===u.quiz[i].a);save();renderQuiz(u);refreshStars();
+    if(answers[u.id+i])b.classList.add('right');
+  });
+  const s=unitStars(u);
+  document.getElementById('qsum').textContent=s===u.quiz.length?`모두 맞혔어요! "${u.badge}" 배지를 받았어요.`:`${u.quiz.length}문제 중 ${s}개 맞힘`;
+}
+
+/* ---------- 놀이 실험실 ---------- */
+const SIMS={
+eco(el){
+  const order=['벼','메뚜기','개구리','뱀','매'];
+  const shuffled=['개구리','매','벼','뱀','메뚜기'];
+  let picked=[];
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">먹이사슬 만들기</span></h3>
+   <p>먹히는 생물부터 차례로 눌러 논의 먹이사슬을 완성해 봐요. 화살표는 "먹힌다"는 뜻이에요.</p>
+   <div class="row" id="pool" style="margin-top:10px"></div>
+   <div class="chain" id="chain"><span class="note">여기에 먹이사슬이 만들어져요</span></div>
+   <div class="row"><button class="btn" id="reset">처음부터</button></div>
+   <div id="fb"></div>
+   <div id="balance" hidden>
+     <h3 class="disp" style="font-size:1.15rem;margin-top:16px">뱀이 갑자기 사라진다면?</h3>
+     <p class="note">버튼을 눌러 시간이 지나면서 생물 수가 어떻게 바뀌는지 보세요.</p>
+     <div class="bars" id="bars"></div>
+     <div class="row" style="margin-top:10px"><button class="btn solid" id="step">다음 단계 보기</button><button class="btn" id="back">처음 상태</button></div>
+     <div class="feedback good" id="stepTxt"></div>
+   </div>`;
+  const pool=el.querySelector('#pool'),chain=el.querySelector('#chain'),fb=el.querySelector('#fb');
+  function draw(){
+    pool.innerHTML=shuffled.map(n=>`<button class="btn" data-n="${n}" ${picked.includes(n)?'disabled':''}>${n}</button>`).join('');
+    chain.innerHTML=picked.length?picked.map((n,i)=>`${i?'<span class="arr">→ 먹힘 →</span>':''}<span class="slot">${n}</span>`).join(''):'<span class="note">여기에 먹이사슬이 만들어져요</span>';
+    pool.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      const n=b.dataset.n;
+      if(n!==order[picked.length]){fb.innerHTML=`<div class="feedback oops"><b>${n}</b>은(는) 지금 차례가 아니에요. ${picked.length?`<b>${picked[picked.length-1]}</b>을(를) 먹는 생물은 누구일까요?`:'먹이사슬은 스스로 양분을 만드는 생산자부터 시작해요.'}</div>`;return}
+      picked.push(n);fb.innerHTML='';draw();
+      if(picked.length===order.length){fb.innerHTML='<div class="feedback good"><b>완성!</b> 벼(생산자) → 메뚜기 → 개구리 → 뱀 → 매(소비자). 이제 이 중 하나가 사라지면 어떻게 될지 실험해 봐요.</div>';el.querySelector('#balance').hidden=false;stage=0;drawBars()}
+    });
+  }
+  el.querySelector('#reset').onclick=()=>{picked=[];fb.innerHTML='';el.querySelector('#balance').hidden=true;draw()};
+  const names=['벼','메뚜기','개구리','뱀','매'];
+  const stages=[
+    {v:[80,60,45,30,15],t:'평소에는 각 생물의 수가 알맞게 유지돼요. 이것이 생태계 평형이에요.'},
+    {v:[80,60,45,0,15],t:'사람들이 뱀을 모두 잡아갔어요. 뱀이 0이 되었어요.'},
+    {v:[80,40,75,0,8],t:'뱀에게 먹히지 않으니 개구리가 크게 늘었어요. 먹이(뱀)를 잃은 매는 줄어들어요.'},
+    {v:[95,20,60,0,6],t:'늘어난 개구리가 메뚜기를 많이 먹어 메뚜기가 줄었어요. 메뚜기에게 덜 먹힌 벼는 늘었어요.'},
+    {v:[82,55,48,25,13],t:'오랜 시간이 지나 뱀이 다시 들어오면 생태계는 조금씩 평형을 되찾아요. 하지만 아주 오래 걸리고, 망가진 생태계가 돌아오지 못하기도 해요.'}];
+  let stage=0;
+  function drawBars(){
+    const s=stages[stage],base=stages[0].v;
+    el.querySelector('#bars').innerHTML=names.map((n,i)=>{const d=s.v[i]-base[i];return `<div class="bar"><span>${n}</span><div class="track"><div class="fill" style="width:${s.v[i]}%"></div></div><span class="chg ${d>0?'up':d<0?'down':''}">${d>0?'▲':d<0?'▼':'–'}</span></div>`}).join('');
+    el.querySelector('#stepTxt').innerHTML=`<b>${stage+1}단계</b> ${s.t}`;
+    el.querySelector('#step').disabled=stage===stages.length-1;
+  }
+  el.querySelector('#step').onclick=()=>{if(stage<stages.length-1){stage++;drawBars()}};
+  el.querySelector('#back').onclick=()=>{stage=0;drawBars()};
+  draw();
+},
+
+weather(el){
+  let day=true;
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">바닷가 바람 관찰</span></h3>
+   <p>낮과 밤을 바꿔 보며 바람의 방향과 기압이 어떻게 달라지는지 보세요.</p>
+   <div class="row" style="margin-top:10px"><button class="btn solid" id="d">낮</button><button class="btn" id="n">밤</button></div>
+   <svg class="scene" viewBox="0 0 600 300" role="img" aria-label="육지와 바다 위의 바람 방향 그림">
+     <rect id="skyR" x="0" y="0" width="600" height="300"/>
+     <circle id="orb" cx="300" cy="50" r="24"/>
+     <rect id="landR" x="0" y="210" width="300" height="90"/>
+     <rect id="seaR" x="300" y="215" width="300" height="85"/>
+     <text id="landT" x="150" y="262" text-anchor="middle" font-size="22" font-family="Jua, sans-serif"></text>
+     <text id="seaT" x="450" y="262" text-anchor="middle" font-size="22" font-family="Jua, sans-serif"></text>
+     <text id="landP" x="150" y="290" text-anchor="middle" font-size="19"></text>
+     <text id="seaP" x="450" y="290" text-anchor="middle" font-size="19"></text>
+     <path id="loop" class="flow" fill="none" stroke-width="5" stroke-linecap="round"/>
+     <path id="head" stroke-width="0"/>
+     <text id="windT" x="300" y="190" text-anchor="middle" font-size="24" font-family="Jua, sans-serif"></text>
+   </svg>
+   <div class="feedback good" id="wtxt"></div>`;
+  const $=s=>el.querySelector(s);
+  const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  function draw(){
+    $('#d').classList.toggle('solid',day);$('#n').classList.toggle('solid',!day);
+    const ink=css('--ink');
+    $('#skyR').setAttribute('fill',day?'#CFE6FA':'#1D2C4A');
+    $('#orb').setAttribute('fill',day?'#FFC83D':'#F1F1E6');
+    $('#orb').setAttribute('cx',day?100:500);
+    $('#landR').setAttribute('fill',day?'#D9A061':'#6B5236');
+    $('#seaR').setAttribute('fill',day?'#4F8FD6':'#2E5C94');
+    const txt=day?'#2B1E0E':'#F2F2F2';
+    ['#landT','#seaT','#landP','#seaP','#windT'].forEach(s=>$(s).setAttribute('fill',txt));
+    $('#landT').textContent=day?'육지: 빨리 뜨거워짐':'육지: 빨리 식음';
+    $('#seaT').textContent=day?'바다: 천천히 데워짐':'바다: 천천히 식음';
+    $('#landP').textContent=day?'따뜻·가벼움 → 저기압':'차갑·무거움 → 고기압';
+    $('#seaP').textContent=day?'차갑·무거움 → 고기압':'따뜻·가벼움 → 저기압';
+    // 바람 순환: 낮은 바다→육지(아래), 밤은 육지→바다(아래)
+    const path=day?'M520 195 L80 195 L80 110 L520 110 L520 180':'M80 195 L520 195 L520 110 L80 110 L80 180';
+    const arrowColor=day?'#1E2A44':'#FFD261';
+    $('#loop').setAttribute('d',path);$('#loop').setAttribute('stroke',arrowColor);
+    $('#head').setAttribute('d',day?'M60 195 l22 -12 v24 z':'M540 195 l-22 -12 v24 z');$('#head').setAttribute('fill',arrowColor);
+    $('#windT').textContent=day?'해풍: 바다 → 육지':'육풍: 육지 → 바다';
+    $('#windT').setAttribute('y',day?100:100);
+    $('#wtxt').innerHTML=day
+      ?'<b>낮</b> 햇빛을 받으면 육지가 바다보다 빨리 뜨거워져요. 육지 위 공기가 데워져 위로 올라가 <b>저기압</b>이 되고, 상대적으로 차가운 바다 위는 <b>고기압</b>이에요. 그래서 바다에서 육지로 <b>해풍</b>이 불어요.'
+      :'<b>밤</b> 육지는 바다보다 빨리 식어요. 이제 육지 위가 차갑고 무거운 <b>고기압</b>, 바다 위가 <b>저기압</b>이 돼요. 그래서 육지에서 바다로 <b>육풍</b>이 불어요.';
+  }
+  $('#d').onclick=()=>{day=true;draw()};$('#n').onclick=()=>{day=false;draw()};
+  draw();
+},
+
+motion(el){
+  const R=[{name:'하늘',d:50,t:10,c:'#E46B2E'},{name:'바다',d:90,t:15,c:'#3B7DDB'},{name:'별이',d:120,t:30,c:'#2E9E6B'}];
+  const maxD=120;let guess=null,raf=0;
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">달리기 속력 대결</span></h3>
+   <p>세 친구의 기록이에요. 누가 가장 빠를지 먼저 골라 보고, 달리기를 시작해 봐요.</p>
+   <table class="tbl"><thead><tr><th>친구</th><th>이동 거리</th><th>걸린 시간</th><th>속력</th></tr></thead>
+   <tbody>${R.map((r,i)=>`<tr><td>${r.name}</td><td>${r.d} m</td><td>${r.t} 초</td><td id="sp${i}">?</td></tr>`).join('')}</tbody></table>
+   <div class="row" style="margin-top:12px"><span class="note">내 예상:</span>${R.map((r,i)=>`<button class="btn" data-g="${i}">${r.name}</button>`).join('')}</div>
+   <div class="track-wrap" id="track">${R.map((r,i)=>`<div class="lane"><span class="who">${r.name}</span><span class="flag" style="left:${r.d/maxD*100}%"></span><span class="runner" id="r${i}" style="background:${r.c}">${r.name[0]}</span></div>`).join('')}</div>
+   <div class="row" style="margin-top:10px;justify-content:space-between"><button class="btn solid" id="go" disabled>달리기 시작</button><span class="timer" id="clock">0.0 초</span></div>
+   <div id="mfb"></div>
+   <h3 class="disp" style="font-size:1.15rem;margin-top:18px">속력 계산기</h3>
+   <div class="calc"><label for="cd">이동 거리 (m)<input id="cd" type="number" min="0" value="100"></label>
+   <label for="ct">걸린 시간 (초)<input id="ct" type="number" min="0" step="0.1" value="20"></label>
+   <div><div class="big" id="cr"></div><div class="note" id="cc"></div></div></div>`;
+  const $=s=>el.querySelector(s);
+  el.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{guess=+b.dataset.g;el.querySelectorAll('[data-g]').forEach(x=>x.classList.toggle('solid',x===b));$('#go').disabled=false});
+  $('#go').onclick=()=>{
+    cancelAnimationFrame(raf);$('#mfb').innerHTML='';
+    const w=$('#track').clientWidth-30, speedUp=3, start=performance.now();
+    R.forEach((_,i)=>{$('#sp'+i).textContent='?'});
+    const step=now=>{
+      const t=(now-start)/1000*speedUp;
+      R.forEach((r,i)=>{const d=Math.min(r.d,r.d/r.t*t);$('#r'+i).style.transform=`translateX(${d/maxD*w}px)`});
+      $('#clock').textContent=Math.min(t,30).toFixed(1)+' 초';
+      if(t<30)raf=requestAnimationFrame(step);else finish();
+    };
+    raf=requestAnimationFrame(step);
+  };
+  function finish(){
+    R.forEach((r,i)=>$('#sp'+i).textContent=`${r.d} ÷ ${r.t} = ${r.d/r.t} m/s`);
+    const best=R.map(r=>r.d/r.t).reduce((b,v,i,a)=>v>a[b]?i:b,0);
+    $('#mfb').innerHTML=`<div class="feedback ${guess===best?'good':'oops'}"><b>${guess===best?'예상 적중!':'앗, 예상과 달라요.'}</b> 가장 빠른 친구는 1초에 6 m를 가는 <b>${R[best].name}</b>예요. 같은 시간 동안 누가 더 앞서 있었는지 다시 보세요. 가장 멀리 뛴 별이는 시간이 오래 걸려서 오히려 가장 느렸어요.</div>`;
+  }
+  const comp=[[1,'사람이 걷는 속력쯤'],[3,'사람이 달리는 속력쯤'],[6,'자전거 속력쯤'],[15,'시내 자동차 속력쯤'],[30,'치타가 전력 질주하는 속력쯤'],[1e9,'자동차 고속도로 속력보다 빨라요']];
+  function calc(){
+    const d=parseFloat($('#cd').value),t=parseFloat($('#ct').value);
+    if(!(d>=0)||!(t>0)){$('#cr').textContent='–';$('#cc').textContent='걸린 시간은 0보다 큰 수를 넣어 주세요.';return}
+    const v=d/t;$('#cr').textContent=`${+v.toFixed(2)} m/s`;
+    $('#cc').textContent=`${d} ÷ ${t} = ${+v.toFixed(2)} · ${comp.find(c=>v<=c[0])[1]}`;
+  }
+  $('#cd').oninput=calc;$('#ct').oninput=calc;calc();
+},
+
+acid(el){
+  const S=[
+    {n:'식초',k:'산',c:'#E0457B'},{n:'레몬즙',k:'산',c:'#E5386F'},{n:'사이다',k:'산',c:'#C95C9C'},{n:'탄산수',k:'산',c:'#C2649E'},{n:'묽은 염산',k:'산',c:'#D9263F'},
+    {n:'비눗물',k:'염기',c:'#3E9AA8'},{n:'석회수',k:'염기',c:'#55A85E'},{n:'유리 세정제',k:'염기',c:'#3A86C2'},{n:'베이킹소다 물',k:'염기',c:'#4E7FCB'},{n:'묽은 수산화 나트륨 용액',k:'염기',c:'#C9B52C'}];
+  let sel=null;const sorted={};
+  el.innerHTML=`<h3>놀이 실험실 <span class="tag">양배추 지시약 탐정</span></h3>
+   <p>용액을 하나 고르면 보라색 양배추 지시약을 떨어뜨려요. 색을 보고 산성인지 염기성인지 분류해 봐요.</p>
+   <div class="lab"><div style="min-width:0"><div class="bottles" id="bt"></div>
+     <div class="bins"><div class="bin"><h4>산성</h4><div id="b산"></div></div><div class="bin"><h4>염기성</h4><div id="b염기"></div></div></div>
+     <div class="row" style="margin-top:10px"><button class="btn" id="toA" disabled>산성으로 분류</button><button class="btn" id="toB" disabled>염기성으로 분류</button></div>
+     <div id="afb"></div></div>
+   <div class="beaker"><svg viewBox="0 0 140 160" role="img" aria-label="비커"><path d="M30 10v120q0 20 20 20h40q20 0 20-20V10" fill="none" stroke="var(--soft)" stroke-width="4"/><rect id="liq" x="34" y="60" width="72" height="86" rx="12" fill="#8E5BB5"/><path d="M24 10h92" stroke="var(--soft)" stroke-width="4"/></svg>
+     <div class="lbl" id="bl">지시약 원래 색 (보라)</div></div></div>
+   <div style="margin-top:12px"><div class="note">양배추 지시약 색 변화</div>
+   <div class="scale"><i style="background:#D9263F"></i><i style="background:#E0457B"></i><i style="background:#C2649E"></i><i style="background:#8E5BB5"></i><i style="background:#4E7FCB"></i><i style="background:#3E9AA8"></i><i style="background:#55A85E"></i><i style="background:#C9B52C"></i></div>
+   <div class="scale-l"><span>강한 산성</span><span>중성</span><span>강한 염기성</span></div></div>`;
+  const $=s=>el.querySelector(s);
+  function draw(){
+    $('#bt').innerHTML=S.map((s,i)=>`<button class="bottle ${sorted[i]?'done':''}" aria-pressed="${sel===i}" data-i="${i}" ${sorted[i]?'disabled':''}>${s.n}</button>`).join('');
+    el.querySelectorAll('.bottle:not([disabled])').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;
+      const liq=$('#liq');liq.setAttribute('fill','#8E5BB5');$('#bl').textContent=S[sel].n+'에 지시약을 넣는 중…';
+      setTimeout(()=>{liq.setAttribute('fill',S[sel].c);$('#bl').textContent=S[sel].n},450);
+      $('#toA').disabled=$('#toB').disabled=false;$('#afb').innerHTML='';draw()});
+    ['산','염기'].forEach(k=>$('#b'+k).innerHTML=S.map((s,i)=>sorted[i]&&s.k===k?`<span class="chip" style="background:${s.c}">${s.n}</span>`:'').join(''));
+  }
+  function put(k){
+    if(sel===null)return;const s=S[sel];
+    if(s.k===k){sorted[sel]=true;$('#afb').innerHTML=`<div class="feedback good"><b>정답!</b> ${s.n}은(는) ${k}성 용액이에요. ${k==='산'?'지시약이 붉은 계열로 변했죠?':'지시약이 푸른색·초록색·노란색 계열로 변했죠?'}</div>`;sel=null;$('#toA').disabled=$('#toB').disabled=true}
+    else $('#afb').innerHTML=`<div class="feedback oops"><b>다시 보세요.</b> 비커 색이 아래 색 띠의 어느 쪽에 가까운지 비교해 봐요.</div>`;
+    draw();
+    if(Object.keys(sorted).length===S.length)$('#afb').innerHTML='<div class="feedback good"><b>모든 용액 분류 완료!</b> 산성은 붉은 쪽, 염기성은 푸른·초록·노란 쪽이었어요. 진짜 리트머스 종이로도 똑같이 확인할 수 있어요.</div>';
+  }
+  $('#toA').onclick=()=>put('산');$('#toB').onclick=()=>put('염기');
+  draw();
+}};
+
+refreshStars();
+renderUnit();
+</script>
+
+
+</html>
