@@ -1,6 +1,6 @@
 // 과학 탐험 노트: src_science.html(아티팩트 원본) 하나로 두 가지를 만든다
 //  1) science.html  - 독립 실행 HTML (exe 안에 들어감, 더블클릭으로도 열림)
-//  2) pwa\          - 휴대폰 홈 화면용 웹앱 (manifest + 오프라인 저장 service worker)
+//  2) docs\         - 휴대폰 홈 화면용 웹앱 (manifest + 오프라인 저장 service worker, GitHub Pages가 이 폴더를 보여 줌)
 // 실행: node build_web.js   (아이콘은 make_icons.ps1 로 먼저 만들어 둔다)
 const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const ROOT=__dirname;
@@ -27,7 +27,7 @@ fs.writeFileSync(path.join(ROOT,'science.html'),page('',''));
 console.log('science.html 만듦');
 
 /* 2) 휴대폰 웹앱 */
-const OUT=path.join(ROOT,'pwa');
+const OUT=path.join(ROOT,'docs');
 fs.mkdirSync(path.join(OUT,'icons'),{recursive:true});
 for(const f of ['icon-192.png','icon-512.png','maskable-512.png'])fs.copyFileSync(path.join(ROOT,'icons',f),path.join(OUT,'icons',f));
 const head=`<link rel="manifest" href="manifest.webmanifest">
@@ -83,4 +83,4 @@ self.addEventListener('fetch',e=>{
   e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request)));
 });
 `);
-console.log(`pwa\\ 만듦 · 버전 ${VER}`);
+console.log(`docs\\ 만듦 · 버전 ${VER}`);
